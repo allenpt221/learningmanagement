@@ -37,10 +37,17 @@ export async function Signup(formData: FormData): Promise<AuthResponse> {
       return { success: false, message: 'Passwords do not match.' };
     }
 
-    const existingUser = await prisma.user.findUnique({ where: { email } });
-    if (existingUser) {
+    const existingEmail = await prisma.user.findUnique({ where: { email } });
+    if (existingEmail) {
       return { success: false, message: 'Email is already in use.' };
     }
+
+    const existingUsername = await prisma.user.findUnique({ where: { username } });
+    if (existingUsername) {
+      return { success: false, message: 'Username is already in use.' };
+    }
+
+
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -110,6 +117,16 @@ export async function LogIn(formData: FormData): Promise<AuthResponse> {
     console.error('Error in LogIn function:', error);
     return { success: false, message: 'Something went wrong during login.' };
   }
+}
+
+export async function LogOut(){
+
+  const cookieStore = cookies();
+
+  cookieStore.delete('accessToken')
+  cookieStore.delete('refreshToken')
+
+  return { success: true, message: 'Logout successful' };
 }
 
 

@@ -2,7 +2,8 @@ import { SignupForm } from "@/components/register-form"
 import { GalleryVerticalEnd } from "lucide-react"
 
 
-export default function LoginPage() {
+export default function RegisterPage() {
+
   return (
     <div className="grid h-[56.05rem] lg:grid-cols-2">
       <div className="flex flex-col gap-4 p-6 md:p-10">

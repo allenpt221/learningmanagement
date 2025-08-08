@@ -16,14 +16,9 @@ export function SignupForm({
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    try {
-    e.preventDefault();
 
-    setTimeout(() => {
-      setError('');
-      setSuccess(false);
-    }, 3000)
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
 
     const form = e.currentTarget;
     const formData = new FormData(form);
@@ -36,18 +31,30 @@ export function SignupForm({
       return;
     }
 
-    const result = await Signup(formData);
+    try {
+      const result = await Signup(formData);
 
-    if (result.success) {
-      setSuccess(true);
-      form.reset();
-    } else {
-      setError(result.message || 'Signup failed');
+      if (result.success) {
+        setSuccess(true);
+        setError('');
+        form.reset();
+      } else {
+        setError(result.message || 'Signup failed');
+        setSuccess(false);
+      }
+    } catch (error: any) {
+      console.error("Error signing up:", error);
+      setError("Something went wrong.");
+      setSuccess(false);
     }
-    } catch (error:any) {
-      console.log("error signing up")
-    }
+
+    // ✅ Clear messages after 3s (AFTER request finishes)
+    setTimeout(() => {
+      setError('');
+      setSuccess(false);
+    }, 3000);
   };
+
 
   return (
     <form

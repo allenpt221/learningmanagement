@@ -1,5 +1,4 @@
 'use client';
-
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -15,6 +14,8 @@ export function LoginForm({
 }: React.ComponentProps<"form">) {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
+  
+
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -33,7 +34,6 @@ export function LoginForm({
         setSuccess(true);
         setError('');
         form.reset();
-
       } else {
         setError(res.message || 'Something went wrong');
         setSuccess(false);
