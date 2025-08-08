@@ -19,6 +19,7 @@ model User {
   email     String   @unique
   username  String   @unique
   password  String
+  image String @default("https://img.freepik.com/free-vector/blue-circle-with-white-user_78370-4707.jpg")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
