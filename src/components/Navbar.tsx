@@ -7,9 +7,9 @@ function Navbar() {
   return (
     <div className='shadow-sm py-2 bg-white'>
       <div className='flex justify-between items-center px-10'>
-        <div className='text-xl font-bold'>
+        <Link href="/" className='text-xl font-bold'>
           LMS
-        </div>
+        </Link>
        <div className="relative w-[30rem]">
           <Input
             type="text"
@@ -23,7 +23,7 @@ function Navbar() {
             <Link href='#' className='border px-4 py-1 rounded-full'>
               Log In
             </Link>
-            <Link href='#' className='px-4 py-1 rounded-full bg-black text-white hover:bg-black/60 transition-all duration-100 ease-in'>
+            <Link href='/register' className='px-4 py-1 rounded-full bg-black text-white hover:bg-black/60 transition-all duration-100 ease-in'>
               Sign up
             </Link>
         </div>
