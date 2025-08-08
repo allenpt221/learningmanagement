@@ -6,6 +6,8 @@ import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { CircleCheckBig, CircleX } from 'lucide-react';
 
 export function SignupForm({
   className,
@@ -15,11 +17,16 @@ export function SignupForm({
   const [success, setSuccess] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    try {
     e.preventDefault();
-    setError('');
-    setSuccess(false);
 
-    const formData = new FormData(e.currentTarget);
+    setTimeout(() => {
+      setError('');
+      setSuccess(false);
+    }, 3000)
+
+    const form = e.currentTarget;
+    const formData = new FormData(form);
 
     const password = formData.get('password') as string;
     const confirmPassword = formData.get('confirmPassword') as string;
@@ -33,9 +40,12 @@ export function SignupForm({
 
     if (result.success) {
       setSuccess(true);
-      e.currentTarget.reset(); // Clear form
+      form.reset();
     } else {
       setError(result.message || 'Signup failed');
+    }
+    } catch (error:any) {
+      console.log("error signing up")
     }
   };
 
@@ -97,10 +107,44 @@ export function SignupForm({
           />
         </div>
 
-        {error && <p className="text-red-500 text-sm">{error}</p>}
-        {success && (
-          <p className="text-green-600 text-sm">Signup successful!</p>
+        {error && (
+          <Alert
+            variant="destructive"
+            className="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-md px-6 py-4 shadow-lg rounded-xl border border-red-300 bg-red-50"
+          >
+            <div className="flex items-start gap-4">
+              <CircleX className="text-red-600 mt-1" />
+              <div className="flex-1">
+                <AlertTitle className="text-red-800 font-semibold text-sm">
+                  Unable to process your sign up
+                </AlertTitle>
+                <AlertDescription className="text-red-700 text-sm mt-1">
+                  {error}
+                </AlertDescription>
+              </div>
+            </div>
+          </Alert>
         )}
+
+        {success && (
+          <Alert
+            variant="default"
+            className="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-md px-6 py-4 shadow-lg rounded-xl border border-green-300 bg-green-50"
+          >
+            <div className="flex items-start gap-4">
+              <CircleCheckBig className="text-green-600 mt-1" />
+              <div className="flex-1">
+                <AlertTitle className="text-green-800 font-semibold text-sm">
+                  Sign Up Successful
+                </AlertTitle>
+                <AlertDescription className="text-green-700 text-sm mt-1">
+                  Welcome! You’ve successfully created your account.
+                </AlertDescription>
+              </div>
+            </div>
+          </Alert>
+        )}
+
 
         <Button type="submit" className="w-full">
           Sign Up
