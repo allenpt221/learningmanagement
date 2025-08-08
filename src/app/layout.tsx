@@ -2,6 +2,10 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
+import { ProfileModalProvider, useProfileModal } from "@/context/ProfileModalContext";
+import ProfilePage from "@/components/Modal/Profile";
+import ProfileModalWrapper from "@/components/ProfileModalWrapper";
+
 
 
 const geistSans = localFont({
@@ -30,9 +34,14 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Navbar />
-        {children}
+        <ProfileModalProvider>
+          <Navbar />
+          <ProfileModalWrapper />
+          {children}
+        </ProfileModalProvider>
       </body>
     </html>
   );
 }
+
+

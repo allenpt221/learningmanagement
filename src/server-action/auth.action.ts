@@ -11,8 +11,11 @@ interface AuthResponse {
   message?: string;
   user?: {
     id: string;
+    firstname: string;
+    lastname: string;
     email: string;
     username: string;
+    image?: string;
   };
   accessToken?: string;
   refreshToken?: string;
@@ -22,14 +25,17 @@ interface AuthResponse {
 // SIGN UP
 export async function Signup(formData: FormData): Promise<AuthResponse> {
   try {
+    const firstname = formData.get('firstname') as string;
+    const lastname = formData.get('lastname') as string;
     const username = formData.get('username') as string;
     const emailRaw = formData.get('email') as string;
     const password = formData.get('password') as string;
     const confirmPassword = formData.get('confirmPassword') as string;
 
+
     const email = emailRaw?.toLowerCase().trim();
 
-    if (!username || !email || !password || !confirmPassword) {
+    if (!username || !email || !password || !confirmPassword || !firstname || !lastname) {
       return { success: false, message: 'All fields are required.' };
     }
 
@@ -53,6 +59,8 @@ export async function Signup(formData: FormData): Promise<AuthResponse> {
 
     const user = await prisma.user.create({
       data: {
+        firstname,
+        lastname,
         username,
         email,
         password: hashedPassword,
@@ -147,6 +155,8 @@ export async function getProfile() {
       where: { id: decoded.userId },
       select: {
         id: true,
+        firstname: true,
+        lastname: true,
         email: true,
         image:true,
         username: true,

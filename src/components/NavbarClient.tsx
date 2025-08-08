@@ -17,9 +17,13 @@ import {
 import { AnimatePresence, motion } from 'framer-motion';
 import { useState } from 'react';
 
+import { useProfileModal } from '@/context/ProfileModalContext';
+
 export default function NavbarClient({ profile }: { profile: any }) {
   const [isOpen, setIsOpen] = useState(false);
   const [searchFocused, setSearchFocused] = useState(false);
+  const { open: openProfile } = useProfileModal();
+
   const router = useRouter();
 
   const handleLogout = async () => {
@@ -76,7 +80,7 @@ export default function NavbarClient({ profile }: { profile: any }) {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-56 rounded-lg shadow-lg border-muted-foreground/20">
                   <DropdownMenuItem asChild className="cursor-pointer hover:bg-muted/50">
-                    <Link href="/profile" className="w-full px-2 py-1.5">Profile</Link>
+                    <button onClick={openProfile} className="w-full px-2 py-1.5">Profile</button>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild className="cursor-pointer hover:bg-muted/50">
                     <Link href="/settings" className="w-full px-2 py-1.5">Settings</Link>
