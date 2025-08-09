@@ -42,6 +42,7 @@ model Post {
   AuthorId String
   content String
   image String?
+  department DepartmentType?
   createdAt DateTime @default(now())
 
   author User @relation(fields: [AuthorId], references: [id], onDelete: Cascade)
