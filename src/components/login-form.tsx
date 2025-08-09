@@ -33,7 +33,6 @@ export function LoginForm({
       if (res.success) {
         setSuccess(true);
         setError('');
-        form.reset();
       } else {
         setError(res.message || 'Something went wrong');
         setSuccess(false);

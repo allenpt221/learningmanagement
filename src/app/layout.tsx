@@ -3,7 +3,6 @@ import localFont from "next/font/local";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import { ProfileModalProvider, useProfileModal } from "@/context/ProfileModalContext";
-import ProfilePage from "@/components/Modal/Profile";
 import ProfileModalWrapper from "@/components/ProfileModalWrapper";
 
 

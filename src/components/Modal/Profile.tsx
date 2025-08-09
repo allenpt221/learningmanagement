@@ -6,6 +6,8 @@ import { X } from 'lucide-react';
 import { Label } from '../ui/label';
 import { Input } from '../ui/input';
 
+import { motion } from 'framer-motion';
+
 type ProfileModalProps = {
   isOpen: boolean;
   isClose: () => void;
@@ -93,7 +95,13 @@ export function ProfilePage({ isOpen, isClose }: ProfileModalProps) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30">
-      <div className="bg-white w-full max-w-md rounded-xl shadow-lg p-8 relative">
+      <motion.div 
+      initial={{opacity: 0, y: 1}}
+      animate={{opacity: 1, y: 0}}
+      exit={{opacity: 0, y: -100}}
+      transition={{duration: 0.5}}
+
+      className="bg-white w-full max-w-md rounded-xl shadow-lg p-8 relative">
         {/* Header */}
         <button
           onClick={isClose}
@@ -107,10 +115,6 @@ export function ProfilePage({ isOpen, isClose }: ProfileModalProps) {
           <p className="text-sm text-gray-500">Manage your personal info</p>
         </div>
 
-        {loading ? (
-          <p className="text-center text-gray-500">Loading...</p>
-        ) : (
-          <>
             <div className="flex flex-col items-center space-y-4 mb-6">
               <div className="relative w-24 h-24">
                 <img
@@ -153,8 +157,6 @@ export function ProfilePage({ isOpen, isClose }: ProfileModalProps) {
                 />
               </div>
             </div>
-
-
             <div>
               <Label className="block text-sm text-gray-600 mb-1">Username</Label>
               <Input
@@ -175,9 +177,7 @@ export function ProfilePage({ isOpen, isClose }: ProfileModalProps) {
                 {saving ? 'Saving...' : 'Save Changes'}
               </button>
             </div>
-          </>
-        )}
-      </div>
+      </motion.div>
     </div>
   );
 }
