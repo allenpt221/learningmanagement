@@ -16,6 +16,12 @@ export function SignupForm({
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
 
+    const departments = [
+    { value: 'College of Computing Studies', label: 'College of Computing Studies' },
+    { value: 'College of Engineering And Arts', label: 'College of Engineering And Arts' },
+    { value: 'College of Business Studies', label: 'College of Business Studies' },
+  ];
+
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -135,7 +141,24 @@ export function SignupForm({
             required
           />
         </div>
-
+        <div className="grid gap-2">
+        <Label htmlFor="department">Department</Label>
+        <select
+          id="department"
+          name="department"
+          className="border rounded-md p-2"
+          defaultValue=""
+        >
+          <option value="" disabled>
+            Select your department
+          </option>
+          {departments.map(({ value, label }) => (
+            <option key={value} value={value}>
+              {label}
+            </option>
+          ))}
+        </select>
+      </div>
         {error && (
           <Alert
             variant="destructive"

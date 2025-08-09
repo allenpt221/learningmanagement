@@ -11,11 +11,12 @@ interface AuthResponse {
   message?: string;
   user?: {
     id: string;
-    firstname: string;
-    lastname: string;
+    firstname?: string;
+    lastname?: string;
     email: string;
     username: string;
     image?: string;
+    type?: string;
   };
   accessToken?: string;
   refreshToken?: string;
@@ -31,6 +32,8 @@ export async function Signup(formData: FormData): Promise<AuthResponse> {
     const emailRaw = formData.get('email') as string;
     const password = formData.get('password') as string;
     const confirmPassword = formData.get('confirmPassword') as string;
+    const type = formData.get('department') as string;
+
 
 
     const email = emailRaw?.toLowerCase().trim();
@@ -53,6 +56,17 @@ export async function Signup(formData: FormData): Promise<AuthResponse> {
       return { success: false, message: 'Username is already in use.' };
     }
 
+    const departmentMap: Record<string, "CCS" | "CEA" | "CBS"> = {
+      "College of Computing Studies": "CCS",
+      "College of Engineering And Arts": "CEA",
+      "College of Business Studies": "CBS",
+    };
+
+    const typeEnum = departmentMap[type];
+    if (!typeEnum) {
+      return { success: false, message: "Invalid department selected." };
+    }
+
 
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -64,6 +78,7 @@ export async function Signup(formData: FormData): Promise<AuthResponse> {
         username,
         email,
         password: hashedPassword,
+        type: typeEnum
       },
     });
 
@@ -161,6 +176,7 @@ export async function getProfile() {
         image:true,
         username: true,
         createdAt: true,
+        type: true
       },
     });
 
