@@ -21,6 +21,7 @@ model User {
   email     String   @unique
   username  String   @unique
   password  String
+  type DepartmentType @default(CCS)
   image String @default("https://img.freepik.com/free-vector/blue-circle-with-white-user_78370-4707.jpg")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -28,6 +29,13 @@ model User {
   // relations
   posts Post[]
 }
+
+enum DepartmentType {
+  CCS     @map("College of Computing Studies")
+  CEA     @map("College of Engineering And Arts")
+  CBS     @map("College of Business Studies")
+}
+
 
 model Post {
   id String @id @default(uuid())
