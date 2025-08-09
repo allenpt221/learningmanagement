@@ -82,7 +82,7 @@ function CreatePost({ image, firstname, lastname }: ProfileType) {
 
   return (
     <div className="flex justify-center py-4">
-      <div className="w-full lg:max-w-2xl border rounded-2xl p-4 shadow-sm bg-white">
+      <div className="w-full max-w-6xl border rounded-2xl p-4 shadow-sm bg-white">
         {/* Profile row */}
         <div className="flex items-center gap-3 mb-3">
           <img

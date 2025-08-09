@@ -85,3 +85,19 @@ export async function getPostsByDepartmentType(department: DepartmentType) {
     throw new Error("Error fetching posts by department");
   }
 }
+
+export async function deletePost(postId: string){
+  try {
+    const deletedPost = await prisma.post.delete({
+      where: {
+        id: postId
+      }
+    });
+
+    revalidatePath('/')
+
+    return { success:true, deletedPost };
+  } catch (error) {
+    throw new Error("Deleting Post");
+  }
+}
