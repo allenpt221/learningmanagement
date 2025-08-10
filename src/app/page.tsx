@@ -6,7 +6,7 @@ import { formatDistanceToNow } from "date-fns";
 import CreatePost from "@/components/CreatePost";
 import PostContent from "@/components/PostContent";
 import { getProfile } from "@/server-action/auth.action";
-import { deletePost, getPostsByDepartmentType, getThePost } from "@/server-action/post.action";
+import { getPostsByDepartmentType, getThePost } from "@/server-action/post.action";
 import { Post, User } from "@/generated/prisma";
 import { PostDropdownMenu } from "@/components/PostDropdownMenu";
 
@@ -17,6 +17,8 @@ export default async function Home() {
   const posts = profile?.user
     ? await getPostsByDepartmentType(profile.user.type) 
     : await getThePost();
+
+    console.log(profile)
 
   return (
     <div className="flex max-w-6xl mx-auto px-4 py-8 gap-8">
@@ -50,18 +52,30 @@ export default async function Home() {
       </main>
 
       {/* Sidebar */}
-      <aside className="w-80 space-y-6">
-        
-        <div className="bg-white rounded-lg shadow p-4">
-          <h3 className="font-medium text-gray-800 mb-3">Trending Topics</h3>
-          <div className="space-y-2">
-            {['#NewProject', '#TeamBuilding', '#TechUpdate', '#CompanyEvent'].map(tag => (
-              <div key={tag} className="text-sm text-blue-600 hover:text-blue-800 cursor-pointer">
-                {tag}
-              </div>
-            ))}
-          </div>
+      <aside className="w-80 h-fit space-y-4 p-4 bg-white dark:bg-gray-900 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+        <div className="flex items-center justify-between mb-2">
+          <h2 className="text-xl font-bold text-gray-800 dark:text-white">Who to follow</h2>
+          <button className="text-sm text-blue-500 hover:text-blue-700 dark:hover:text-blue-400">
+            Refresh
+          </button>
         </div>
+          <div className="space-y-3">
+            {/* Sample follow suggestion - repeat this block for each suggestion */}
+            <div className="flex items-center justify-between p-2 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors">
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 rounded-full bg-gray-300 dark:bg-gray-600 overflow-hidden">
+                  {/* Profile image would go here */}
+                </div>
+                <div>
+                  <h3 className="font-medium text-gray-900 dark:text-white">Username</h3>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">@handle</p>
+                </div>
+              </div>
+              <button className="px-3 py-1 bg-black text-white text-sm font-medium rounded-full hover:bg-gray-800 dark:bg-white dark:text-black dark:hover:bg-gray-200 transition-colors">
+                Follow
+              </button>
+            </div>
+          </div>
       </aside>
     </div>
   );
