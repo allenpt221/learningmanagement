@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import Navbar from "@/components/Navbar";
-import { ProfileModalProvider, useProfileModal } from "@/context/ProfileModalContext";
-import ProfileModalWrapper from "@/components/ProfileModalWrapper";
+import Navbar from "@/components/common/Navbar";
+import ClientLayoutWrapper from "@/components/ClientLayoutWrapper";
 
 
 
@@ -28,16 +27,15 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
+
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ProfileModalProvider>
           <Navbar />
-          <ProfileModalWrapper />
-          {children}
-        </ProfileModalProvider>
+          <ClientLayoutWrapper>{children}</ClientLayoutWrapper>
       </body>
     </html>
   );
