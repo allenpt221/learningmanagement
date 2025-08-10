@@ -2,7 +2,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { LogOut } from '@/server-action/auth.action';
 import { Input } from './ui/input';
 import { Search, Bell, ChevronDown, Menu, X } from 'lucide-react';
@@ -17,13 +17,17 @@ import {
 import { AnimatePresence, motion } from 'framer-motion';
 import { useState } from 'react';
 
-import { useProfileModal } from '@/context/ProfileModalContext';
+
+
 
 export default function NavbarClient({ profile }: { profile: any }) {
+  const pathname = usePathname();
+
   const [isOpen, setIsOpen] = useState(false);
   const [searchFocused, setSearchFocused] = useState(false);
-  const { open: openProfile } = useProfileModal();
 
+  const profileUrl = `/profile/${profile.user?.username}`;
+  
   const router = useRouter();
 
   const handleLogout = async () => {
@@ -36,11 +40,36 @@ export default function NavbarClient({ profile }: { profile: any }) {
     <header className="sticky top-0 z-50 border-b bg-white/95 backdrop-blur-sm">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         {/* Logo */}
-        <Link href="/" className="flex items-center space-x-2">
-          <span className="text-2xl font-bold bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
-            LMS
-          </span>
+    <div className='flex items-center gap-6'>
+      <Link 
+        href="/" 
+        className="flex flex-col items-center space-x-2 hover:opacity-90 transition-opacity"
+      >
+        <span className="text-lg font-bold bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
+          StudySphere
+        </span>
+        <p className='text-xs'></p>
+      </Link>
+      
+      <nav className="hidden md:flex items-center gap-6">
+        <Link 
+          href='/community' 
+          className="text-sm font-medium text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors px-1 py-2 relative group"
+        >
+          Community
+          <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 group-hover:w-full transition-all duration-300"></span>
         </Link>
+        
+        {/* Additional navigation links can be added here */}
+        <Link 
+          href='/courses' 
+          className="text-sm font-medium text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors px-1 py-2 relative group"
+        >
+          Courses
+          <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 group-hover:w-full transition-all duration-300"></span>
+        </Link>
+      </nav>
+    </div>
 
         {/* Search Bar */}
         <div className={`flex relative w-full max-w-md mx-4 transition-all duration-200 ${searchFocused ? 'scale-[1.02]' : ''}`}>
@@ -80,7 +109,11 @@ export default function NavbarClient({ profile }: { profile: any }) {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-56 rounded-lg shadow-lg border-muted-foreground/20">
                   <DropdownMenuItem asChild className="cursor-pointer hover:bg-muted/50">
-                    <button onClick={openProfile} className="w-full px-2 py-1.5">Profile</button>
+                  {pathname === profileUrl ? (
+                    <span className="w-full px-2 py-1.5">Profile</span>
+                  ) : (
+                    <Link href={`profile/${profile.user?.username}`} className="w-full px-2 py-1.5">Profile</Link>
+                  )}
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild className="cursor-pointer hover:bg-muted/50">
                     <Link href="/settings" className="w-full px-2 py-1.5">Settings</Link>
