@@ -1,11 +1,11 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { getProfile} from '@/server-action/auth.action';
+import { getProfile } from '@/server-action/auth.action';
+import { updateProfile } from '@/server-action/profile.action';
 import { X } from 'lucide-react';
 import { Label } from '../ui/label';
 import { Input } from '../ui/input';
-
 import { motion } from 'framer-motion';
 
 type ProfileModalProps = {
@@ -17,6 +17,8 @@ type UserProfile = {
   id: string;
   email: string;
   username: string;
+  firstname: string;
+  lastname: string;
   image: string;
   createdAt: Date;
 };
@@ -30,22 +32,20 @@ export function ProfilePage({ isOpen, isClose }: ProfileModalProps) {
   });
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
-  const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     if (!isOpen) return;
 
     const fetchProfile = async () => {
-      setLoading(true);
       try {
         const data = await getProfile();
-       if (data?.user) {
+        if (data?.user) {
           setProfile(data.user);
           setUserData({
-            username: data.user?.username || '',
-            firstname: data.user?.firstname || '',
-            lastname: data.user?.lastname || ''
+            username: data.user.username || '',
+            firstname: data.user.firstname || '',
+            lastname: data.user.lastname || ''
           });
           setImagePreview(data.user.image || '');
         } else {
@@ -54,8 +54,6 @@ export function ProfilePage({ isOpen, isClose }: ProfileModalProps) {
       } catch (error) {
         console.error('Failed to fetch profile', error);
         setProfile(null);
-      } finally {
-        setLoading(false);
       }
     };
 
@@ -71,19 +69,23 @@ export function ProfilePage({ isOpen, isClose }: ProfileModalProps) {
   };
 
   const handleSave = async () => {
+    if (!profile) return;
     setSaving(true);
     try {
-      // let imageUrl = profile?.image || '';
+      const formData = new FormData();
+      formData.append("id", profile.id);
+      formData.append("username", userData.username);
+      formData.append("firstname", userData.firstname);
+      formData.append("lastname", userData.lastname);
+      formData.append("image", imagePreview || "");
 
-      // if (imageFile) {
-      //   const formData = new FormData();
-      //   formData.append('file', imageFile);
-      //   const uploaded = await uploadImage(formData);
-      //   imageUrl = uploaded.url;
-      // }
+      const updated = await updateProfile(formData);
 
-      // await updateProfile({ name, image: imageUrl });
-      // setProfile((prev) => prev ? { ...prev, name, image: imageUrl } : null);
+      if(updated.success){
+        isClose();
+      }
+
+      setProfile(prev => prev ? { ...prev, ...updated } : null);
     } catch (err) {
       console.error('Failed to update profile', err);
     } finally {
@@ -95,14 +97,13 @@ export function ProfilePage({ isOpen, isClose }: ProfileModalProps) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30">
-      <motion.div 
-      initial={{opacity: 0, y: 1}}
-      animate={{opacity: 1, y: 0}}
-      exit={{opacity: 0, y: -100}}
-      transition={{duration: 0.5}}
-
-      className="bg-white w-full max-w-md rounded-xl shadow-lg p-8 relative">
-        {/* Header */}
+      <motion.div
+        initial={{ opacity: 0, y: 1 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -100 }}
+        transition={{ duration: 0.5 }}
+        className="bg-white w-full max-w-md rounded-xl shadow-lg p-8 relative"
+      >
         <button
           onClick={isClose}
           className="absolute top-4 right-4 text-gray-500 hover:text-black"
@@ -115,68 +116,66 @@ export function ProfilePage({ isOpen, isClose }: ProfileModalProps) {
           <p className="text-sm text-gray-500">Manage your personal info</p>
         </div>
 
-            <div className="flex flex-col items-center space-y-4 mb-6">
-              <div className="relative w-24 h-24">
-                <img
-                  src={imagePreview || '/placeholder.png'}
-                  alt="Profile"
-                  className="w-24 h-24 rounded-full object-cover border"
-                />
-                <Label className="absolute bottom-0 right-0 bg-white rounded-full p-1 shadow-sm cursor-pointer hover:shadow-md transition">
-                  <Input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageChange}
-                    className="hidden"
-                  />
-                  <span className="text-xs text-gray-500">Edit</span>
-                </Label>
-              </div>
-
-              <p className="text-sm text-gray-600">{profile?.email}</p>
-            </div>
-
-            <div className='flex gap-3'>
-              <div>
-                <Label className="block text-sm text-gray-600 mb-1">First Name</Label>
-                <Input
-                  type="text"
-                  value={userData.firstname}
-                  onChange={(e) => setUserData({ ...userData, firstname: e.target.value })}
-                  className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-
-              <div>
-                <Label className="block text-sm text-gray-600 mb-1">Last Name</Label>
-                <Input
-                  type="text"
-                  value={userData.lastname}
-                  onChange={(e) => setUserData({ ...userData, lastname: e.target.value })}
-                  className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-            </div>
-            <div>
-              <Label className="block text-sm text-gray-600 mb-1">Username</Label>
+        <div className="flex flex-col items-center space-y-4 mb-6">
+          <div className="relative w-24 h-24">
+            <img
+              src={imagePreview || '/placeholder.png'}
+              alt="Profile"
+              className="w-24 h-24 rounded-full object-cover border"
+            />
+            <Label className="absolute bottom-0 right-0 bg-white rounded-full p-1 shadow-sm cursor-pointer hover:shadow-md transition">
               <Input
-                type="text"
-                value={userData.username}
-                onChange={(e) => setUserData({ ...userData, username: e.target.value })}
-                className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+                className="hidden"
               />
-            </div>
+              <span className="text-xs text-gray-500">Edit</span>
+            </Label>
+          </div>
+          <p className="text-sm text-gray-600">{profile?.email}</p>
+        </div>
 
+        <div className='flex gap-3'>
+          <div>
+            <Label className="block text-sm text-gray-600 mb-1">First Name</Label>
+            <Input
+              type="text"
+              value={userData.firstname}
+              onChange={(e) => setUserData({ ...userData, firstname: e.target.value })}
+              className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+          <div>
+            <Label className="block text-sm text-gray-600 mb-1">Last Name</Label>
+            <Input
+              type="text"
+              value={userData.lastname}
+              onChange={(e) => setUserData({ ...userData, lastname: e.target.value })}
+              className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+        </div>
 
-            <div className="mt-8 flex justify-end items-center">
-              <button
-                onClick={handleSave}
-                disabled={saving}
-                className="bg-black hover:bg-black/70 text-white font-medium text-sm px-4 py-2 rounded-md disabled:opacity-50"
-              >
-                {saving ? 'Saving...' : 'Save Changes'}
-              </button>
-            </div>
+        <div>
+          <Label className="block text-sm text-gray-600 mb-1">Username</Label>
+          <Input
+            type="text"
+            value={userData.username}
+            onChange={(e) => setUserData({ ...userData, username: e.target.value })}
+            className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+
+        <div className="mt-8 flex justify-end items-center">
+          <button
+            onClick={handleSave}
+            disabled={saving}
+            className="bg-black hover:bg-black/70 text-white font-medium text-sm px-4 py-2 rounded-md disabled:opacity-50"
+          >
+            {saving ? 'Saving...' : 'Save Changes'}
+          </button>
+        </div>
       </motion.div>
     </div>
   );

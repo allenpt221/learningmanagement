@@ -1,6 +1,8 @@
 import { notFound } from 'next/navigation';
 import { getProfileByUsername } from '@/server-action/profile.action';
 import React from 'react';
+import ProfilePage from '@/components/Modal/Profile';
+import ProfileModal from '../ProfileModal';
 
 export async function generateMetadata({ params }: { params: { username: string } }) {
   const user = await getProfileByUsername(params.username);
@@ -13,15 +15,16 @@ export async function generateMetadata({ params }: { params: { username: string 
 
 export default async function Profile({ params }: { params: { username: string } }) {
   const user = await getProfileByUsername(params.username);
-
-
+  
   if (!user) {
-    notFound(); 
+    notFound();
   }
 
   return (
     <div>
-      <h1>{user.username}</h1>
+      {/* Show the modal immediately for this page */}
+      {user.username}
+      <ProfileModal click={"click"} />
     </div>
   );
 }
