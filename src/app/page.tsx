@@ -1,10 +1,7 @@
 
 // app/page.tsx
-import { Dot, Ellipsis, MessageCircle, ThumbsUp } from "lucide-react";
-import { formatDistanceToNow } from "date-fns";
 
 import CreatePost from "@/components/CreatePost";
-import PostContent from "@/components/PostContent";
 import { getProfile } from "@/server-action/auth.action";
 import { getPostsByDepartmentType, getThePost } from "@/server-action/post.action";
 import { Post, User } from "@/generated/prisma";
