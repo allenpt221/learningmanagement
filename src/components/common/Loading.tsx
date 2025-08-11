@@ -15,7 +15,7 @@ export default function Loading() {
           clearInterval(timer);
           return 100;
         }
-        return prev + 5;
+        return prev + 10;
       });
     }, 150); // smooth increments
 

@@ -7,6 +7,7 @@ import { useState } from "react";
 import { LogIn } from "@/server-action/auth.action";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { CircleCheckBig, MessageCircleWarning } from "lucide-react";
+import Link from "next/link";
 
 export function LoginForm({
   className,
@@ -129,9 +130,9 @@ export function LoginForm({
 
       <div className="text-center text-sm">
         Don&apos;t have an account?{" "}
-        <a href="/register" className="underline underline-offset-4">
+        <Link href="/register" className="underline underline-offset-4">
           Sign up
-        </a>
+        </Link>
       </div>
     </form>
   );

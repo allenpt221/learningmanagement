@@ -8,6 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { CircleCheckBig, CircleX } from 'lucide-react';
+import Link from 'next/link';
 
 export function SignupForm({
   className,
@@ -204,9 +205,9 @@ export function SignupForm({
 
         <div className="text-center text-sm">
           Already have an account?{" "}
-          <a href="/login" className="underline underline-offset-4">
+          <Link href="/login" className="underline underline-offset-4">
             Login
-          </a>
+          </Link>
         </div>
       </div>
     </form>
