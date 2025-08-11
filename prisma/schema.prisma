@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
   output   = "../src/generated/prisma"
@@ -17,20 +11,19 @@ datasource db {
 model User {
   id        String   @id @default(uuid())
   firstname String
-  lastname String
+  lastname  String
   email     String   @unique
   username  String   @unique
   password  String
-  type DepartmentType @default(CCS)
-  image String @default("https://img.freepik.com/free-vector/blue-circle-with-white-user_78370-4707.jpg")
+  type      DepartmentType @default(CCS)
+  image     String @default("https://img.freepik.com/free-vector/blue-circle-with-white-user_78370-4707.jpg")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   // relations
-  posts Post[]
-  likes Like[]
-  comment Comment[]
-
+  posts    Post[]
+  likes    Like[]
+  comment  Comment[]
 }
 
 enum DepartmentType {
@@ -39,48 +32,47 @@ enum DepartmentType {
   CBS     @map("College of Business Studies")
 }
 
-
 model Post {
-  id String @id @default(uuid())
-  AuthorId String
-  content String
-  image String?
+  id         String   @id @default(uuid())
+  AuthorId   String
+  content    String
+  image      String?
   department DepartmentType?
-  createdAt DateTime @default(now())
+  createdAt  DateTime @default(now())
 
-  author User @relation(fields: [AuthorId], references: [id], onDelete: Cascade)
-  likes Like[]
+  author  User @relation(fields: [AuthorId], references: [id], onDelete: Cascade)
+  likes   Like[]
   comment Comment[]
-
 }
 
 model Like {
-  id String @id @default(uuid())
-  postId String
-  userId String
+  id        String   @id @default(uuid())
+  postId    String
+  userId    String
   createdAt DateTime @default(now())
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
 
-   @@index([userId,postId])
-   @@unique([userId, postId])
-
+  @@index([userId, postId])
+  @@unique([userId, postId])
 }
 
 model Comment {
-  id String @id @default(uuid())
-  content String
-  authorId String
-  postId String
+  id        String   @id @default(uuid())
+  content   String
+  authorId  String
+  postId    String
+  parentId  String?       // <-- nullable parent comment ID for replies
   createdAt DateTime @default(now())
 
-  user User @relation(fields: [authorId], references: [id], onDelete:  Cascade)
-  post Post @relation(fields: [postId], references: [id], onDelete:  Cascade)
+  user User @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
 
-  @@index([authorId,postId])
+  // Self-relation for comment replies
+  parent  Comment?   @relation("CommentReplies", fields: [parentId], references: [id])
+  replies Comment[]  @relation("CommentReplies")
 
+  @@index([authorId, postId])
+  @@index([parentId])
 }
-
-
-
