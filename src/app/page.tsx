@@ -4,7 +4,6 @@
 import CreatePost from "@/components/CreatePost";
 import { getProfile } from "@/server-action/auth.action";
 import { getPostsByDepartmentType, getThePost } from "@/server-action/post.action";
-import { Post, User } from "@/generated/prisma";
 import { PostCard } from "@/components/PostCard";
 
 
@@ -14,7 +13,6 @@ export default async function Home() {
     ? await getPostsByDepartmentType(profile.user.type) 
     : await getThePost();
 
-    console.log(profile)
 
   return (
     <div className="flex max-w-6xl mx-auto px-4 py-8 gap-8">
@@ -30,7 +28,7 @@ export default async function Home() {
           </div>
         )}
         
-        <section className="bg-white rounded-lg shadow p-6">
+        <section className="bg-white rounded-lg shadow sm:p-6 p-2">
           <h2 className="text-2xl font-semibold mb-6 text-gray-800">Recent Posts</h2>
           
           {posts.length === 0 ? (
@@ -40,7 +38,8 @@ export default async function Home() {
           ) : (
             <div className="flex flex-col gap-6">
               {posts.map((post) => (
-                <PostCard key={post.id} post={post} isAuthor={post.author.id === profile?.user?.id} currentUserId={profile?.user?.id ?? ""}/>
+                <PostCard key={post.id} post={{...post,comment: post.comment.map(c => ({...c, author: c.user, })), }} // remap to match PostCard's expected type
+                isAuthor={post.author.id === profile?.user?.id} currentUserId={profile?.user?.id ?? ""} auth={profile?.user ?? null}/>
               ))}
             </div>
           )}
@@ -48,7 +47,7 @@ export default async function Home() {
       </main>
 
       {/* Sidebar */}
-      <aside className="w-80 h-fit space-y-4 p-4 bg-white dark:bg-gray-900 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+      <aside className="lg:block hidden w-80  h-fit space-y-4 p-4 bg-white dark:bg-gray-900 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
         <div className="flex items-center justify-between mb-2">
           <h2 className="text-xl font-bold text-gray-800 dark:text-white">Who to follow</h2>
           <button className="text-sm text-blue-500 hover:text-blue-700 dark:hover:text-blue-400">
@@ -57,7 +56,7 @@ export default async function Home() {
         </div>
           <div className="space-y-3">
             {/* Sample follow suggestion - repeat this block for each suggestion */}
-            <div className="flex items-center justify-between p-2 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors">
+            <div className="flex lg:flex-row flex-col lg:items-center gap-2 justify-between p-2 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors">
               <div className="flex items-center space-x-3">
                 <div className="w-10 h-10 rounded-full bg-gray-300 dark:bg-gray-600 overflow-hidden">
                   {/* Profile image would go here */}
@@ -67,7 +66,7 @@ export default async function Home() {
                   <p className="text-sm text-gray-500 dark:text-gray-400">@handle</p>
                 </div>
               </div>
-              <button className="px-3 py-1 bg-black text-white text-sm font-medium rounded-full hover:bg-gray-800 dark:bg-white dark:text-black dark:hover:bg-gray-200 transition-colors">
+              <button className="px-3 lg:py-1 py-2 bg-black text-white text-sm font-medium rounded-full hover:bg-gray-800 dark:bg-white dark:text-black dark:hover:bg-gray-200 transition-colors">
                 Follow
               </button>
             </div>

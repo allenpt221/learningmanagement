@@ -13,7 +13,7 @@ export default function PostContent({ content }: { content: string }) {
 
   return (
     <div className="space-x-2">
-      <p className="text-gray-700 whitespace-pre-line">
+      <p className="text-gray-700 whitespace-pre-line sm:text-sm text-xs">
         {isExpanded ? content : `${content.substring(0, maxLength)}...`}
       <button
         onClick={() => setIsExpanded(!isExpanded)}

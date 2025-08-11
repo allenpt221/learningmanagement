@@ -2,8 +2,9 @@
 import prisma from '@/lib/prisma';
 import { getProfile } from './auth.action';
 import cloudinary from '@/lib/cloudinary';
-import { DepartmentType, Post, User } from '@/generated/prisma';
+import { DepartmentType  } from '@/generated/prisma';
 import { revalidatePath } from 'next/cache';
+
 
 export async function createPost(formData: FormData) {
   // Get logged-in user
@@ -48,14 +49,35 @@ export async function createPost(formData: FormData) {
   return { success: true, post: newPost };
 }
 
-export async function getThePost(): Promise<(Post & { author: User })[]>{
+export async function getThePost(){
   try {
-    const getPost = await prisma.post.findMany({
-      include:{
-        author: true
+
+  const getPost = await prisma.post.findMany({
+    include: {
+      author: true,
+      likes: {
+        select: { userId: true }
       },
-      orderBy: { createdAt: "desc"}
-    });
+      comment: {
+        where: {
+          parentId: null
+        },
+        include: {
+          user: true,
+        replies: {
+          include: {
+            user: true,
+          }
+        },
+      },
+      },
+      _count: {
+        select: { likes: true, comment: true }
+      }
+    },
+    orderBy: { createdAt: "desc" }
+  });
+
 
     return getPost;
   } catch (error) {
@@ -64,27 +86,38 @@ export async function getThePost(): Promise<(Post & { author: User })[]>{
 }
 
 
-export async function getPostsByDepartmentType(department: DepartmentType) {
+export async function getPostsByDepartmentType(department: DepartmentType){
   try {
-    const posts = await prisma.post.findMany({
+    return await prisma.post.findMany({
       where: {
-        author: {
-          type: department,  // filter posts by author's department type
-        },
+        author: { type: department },
       },
       include: {
         author: true,
+        likes: { 
+          select: { 
+            userId: true 
+          } 
+        },
+        comment: {
+          include: {
+            user: true
+          }
+        },
+        _count: { 
+          select: { 
+            likes: true, 
+            comment: true
+          } 
+        },
       },
-      orderBy: {
-        createdAt: "desc",
-      },
+      orderBy: { createdAt: "desc" },
     });
-
-    return posts;
   } catch (error) {
     throw new Error("Error fetching posts by department");
   }
 }
+
 
 export async function deletePost(postId: string){
   try {
@@ -101,3 +134,124 @@ export async function deletePost(postId: string){
     throw new Error("Deleting Post");
   }
 }
+
+export async function toggleLikes(postId: string) {
+  try {
+    const profile = await getProfile();
+
+    if (!profile.success || !profile.user) {
+      return { success: false, error: "Unauthorized" } as const;
+    }
+
+    const userId = profile.user.id;
+
+    const existLikes = await prisma.like.findUnique({
+      where: { userId_postId: { userId, postId } }
+    });
+
+    const post = await prisma.post.findUnique({
+      where: { id: postId },
+      select: { AuthorId: true }
+    });
+
+    if (!post) {
+      return { success: false, error: "Post not found" } as const;
+    }
+
+    if (existLikes) {
+      await prisma.like.delete({
+        where: { userId_postId: { userId, postId } }
+      });
+    } else {
+      await prisma.like.create({
+        data: { userId, postId }
+      });
+    }
+
+    revalidatePath("/");
+    return { success: true } as const;
+
+  } catch (error) {
+    console.error("Failed to toggle like:", error);
+    return { success: false, error: "Failed to toggle like" } as const;
+  }
+}
+
+export async function createComment(postId: string, content: string, parentId?: string | null){
+  try {
+    const profile = await getProfile();
+
+    if (!profile.success || !profile.user) {
+      return { success: false, error: "Unauthorized" } as const;
+    }
+    
+    const userId = profile.user.id;
+
+    const post = await prisma.post.findUnique({
+      where: { id: postId },
+      select: { AuthorId: true },
+    });
+
+    const newComment = await prisma.comment.create({
+        data: {
+          content,
+          authorId: userId,
+          postId,
+          parentId
+        },
+      });
+
+    if (!post) throw new Error("Post not found");
+
+
+    revalidatePath(`/`);
+    return { success: true, newComment };
+
+  } catch (error) {
+    console.error("Failed to comment in post:", error);
+    return { success: false, error: "Failed to comment " } as const;
+  }
+} 
+
+export async function updateComment(commentId: string,content: string, currentUserId: string) {
+  try {
+    if (!commentId || !content.trim()) {
+      return { success: false, error: "Comment ID and content are required" };
+    }
+
+    // Check ownership
+    const existingComment = await prisma.comment.findUnique({
+      where: { id: commentId },
+      select: { authorId: true },
+    });
+
+    if (!existingComment) {
+      return { success: false, error: "Comment not found" };
+    }
+
+    if (existingComment.authorId !== currentUserId) {
+      return { success: false, error: "Unauthorized" };
+    }
+
+    // Update comment
+    const updatedComment = await prisma.comment.update({
+      where: { id: commentId },
+      data: { content: content.trim() },
+      include: {
+        user: {
+          select: { id: true, firstname: true, lastname: true, email: true },
+        },
+      },
+    });
+
+    return { success: true, data: updatedComment, message: "Comment updated successfully" };
+  } catch (error: any) {
+    console.error("Error updating comment:", error);
+    if (error.code === "P2025") {
+      return { success: false, error: "Comment not found" };
+    }
+    return { success: false, error: error instanceof Error ? error.message : "Failed to update comment" };
+  }
+}
+
+
