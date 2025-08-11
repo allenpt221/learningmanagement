@@ -36,6 +36,7 @@ export function ProfilePage({ isOpen, isClose }: ProfileModalProps) {
 
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
+  const [imageFile, setImageFile] = useState<File | null>(null);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -51,6 +52,7 @@ export function ProfilePage({ isOpen, isClose }: ProfileModalProps) {
             lastname: data.user.lastname || ''
           });
           setImagePreview(data.user.image || '');
+          setImageFile(null);
         } else {
           setProfile(null);
         }
@@ -66,6 +68,7 @@ export function ProfilePage({ isOpen, isClose }: ProfileModalProps) {
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      setImageFile(file)
       setImagePreview(URL.createObjectURL(file));
     }
   };
@@ -81,7 +84,12 @@ export function ProfilePage({ isOpen, isClose }: ProfileModalProps) {
       formData.append("username", userData.username);
       formData.append("firstname", userData.firstname);
       formData.append("lastname", userData.lastname);
-      formData.append("image", imagePreview || "");
+
+
+      if (imageFile) {
+        formData.append("image", imageFile); // send file, not preview string
+      }
+
 
       const result = await updateProfile(formData);
 

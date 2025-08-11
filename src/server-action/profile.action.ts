@@ -1,5 +1,6 @@
 "use server";
 
+import cloudinary from "@/lib/cloudinary";
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 
@@ -42,9 +43,25 @@ export async function updateProfile(formData: FormData): Promise<UserTypeUpdate>
     const username = formData.get("username") as string;
     const firstname = formData.get("firstname") as string;
     const lastname = formData.get("lastname") as string;
-    const image = formData.get("image") as string;
+    const imageFile = formData.get("image") as File | null;
 
     if (!id) throw new Error("User ID is required");
+
+    let ImageUrl = null;
+
+    if(imageFile && imageFile.size > 0 ){
+      const buffer = await imageFile.arrayBuffer();
+      const base64 = Buffer.from(buffer).toString("base64");
+
+      const uploadResult = await cloudinary.uploader.upload(
+        `data:${imageFile.type};base64,${base64}`,
+        {
+          folder: "profile",
+        }
+      );
+
+      ImageUrl = uploadResult.secure_url;
+    }
 
     const updatedUser = await prisma.user.update({
       where: { id },
@@ -52,7 +69,7 @@ export async function updateProfile(formData: FormData): Promise<UserTypeUpdate>
         username,
         firstname,
         lastname,
-        image,
+        ...(ImageUrl ? { image: ImageUrl } : {}),
       },
       select: {
         username: true,
