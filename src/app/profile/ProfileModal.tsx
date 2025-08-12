@@ -9,7 +9,9 @@ function ProfileModal({ click }: { click: string }) {
 
   return (
     <div>
-      <button onClick={() => setIsOpen(true)}>
+      <button 
+      className="border px-3 py-1 rounded bg-black text-white"
+      onClick={() => setIsOpen(true)}>
         {click}
       </button>
       {isOpen && (

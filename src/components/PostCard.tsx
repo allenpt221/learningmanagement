@@ -11,6 +11,7 @@ import PostContent from "./PostContent";
 import { Post as PrismaPost, User, Comment as PrismaComment, DepartmentType } from "@/generated/prisma";
 import { Alert, AlertDescription, AlertTitle } from "./ui/alert";
 import { CommentsTree } from "./RenderComments";
+import { Button } from "./ui/button";
 
 type CommentWithAuthor = PrismaComment & { author: User };
 
@@ -141,32 +142,39 @@ export function PostCard({ post, isAuthor, currentUserId, auth }: PostCardProps)
       </div>
 
       {/* Post Footer */}
-      <div className="px-4 py-2 border-t bg-gray-50">
-        <div className="flex flex-col-reverse sm:flex-row sm:justify-between justify-normal sm:items-center text-sm">
-          <span className="text-xs text-gray-500">
-            {formatDistanceToNow(new Date(post.createdAt), { addSuffix: true })}
-          </span>
-          <div className="flex space-x-4">
-            <button
+      <div className="px-4 py-2 bg-gray-50/50 border-t">
+        <div className="flex flex-col-reverse sm:flex-row sm:justify-between sm:items-center gap-2 text-sm">          
+          {/* Action buttons with counts and states */}
+          <div className="flex items-center gap-4">
+            <Button
+              variant="ghost"
+              size="sm"
+              className={`h-8 gap-1 ${hasLiked ? "text-blue-500" : "text-gray-600 hover:text-blue-500"}`}
               onClick={handleLike}
               disabled={isLiking}
-              className={`flex items-center gap-1 transition-colors ${
-                hasLiked ? "text-blue-500" : "text-gray-600 hover:text-blue-500"
-              }`}
             >
-              <ThumbsUp size={15} />
-              <span className="text-xs">{hasLiked ? "Liked" : "Like"}</span>
-              {likeCount > 0 && <span className="text-xs">({likeCount})</span>}
-            </button>
+              <ThumbsUp
+                size={16}
+                className={hasLiked ? "fill-blue-500" : "fill-transparent"}
+              />
+              <span>{hasLiked ? "Liked" : "Like"}</span>
+              {likeCount > 0 && (
+                <span className="text-xs ml-1">({likeCount})</span>
+              )}
+            </Button>
 
-            <button
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-8 gap-1 text-gray-600 hover:text-blue-500"
               onClick={() => setShowComments((prev) => !prev)}
-              className="hover:text-blue-500 transition-colors flex items-center gap-1 text-gray-600"
             >
-              <MessageCircle size={15} />
-              <span className="text-xs">Comment</span>
-              {comments.length > 0 && <span className="text-xs">({comments.length})</span>}
-            </button>
+              <MessageCircle size={16} />
+              <span>Comment</span>
+              {comments.length > 0 && (
+                <span className="text-xs ml-1">({comments.length})</span>
+              )}
+            </Button>
           </div>
         </div>
       </div>

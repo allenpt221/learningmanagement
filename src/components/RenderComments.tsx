@@ -117,7 +117,8 @@ export function CommentsTree({
               </p>
               <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center">
                 {editingCommentId === comment.id ? (
-                  <textarea
+                  <input
+                    type="text"
                     value={editingContent}
                     onChange={(e) => setEditingContent(e.target.value)}
                     className="w-full border rounded px-2 py-1 text-sm"
@@ -186,7 +187,8 @@ export function CommentsTree({
 
               {replyToCommentId === comment.id && editingCommentId === null && (
                 <div className="mt-2 flex sm:flex-row flex-col gap-2">
-                  <textarea
+                  <input
+                    type="text"
                     value={newComment}
                     onChange={(e) => setNewComment(e.target.value)}
                     placeholder={`Reply to ${comment.author.firstname}...`}
