@@ -63,10 +63,10 @@ export async function getThePost(){
           parentId: null
         },
         include: {
-          user: true,
+          author: true,
         replies: {
           include: {
-            user: true,
+            author: true,
           }
         },
       },
@@ -101,7 +101,7 @@ export async function getPostsByDepartmentType(department: DepartmentType){
         },
         comment: {
           include: {
-            user: true
+            author: true
           }
         },
         _count: { 
@@ -169,6 +169,7 @@ export async function toggleLikes(postId: string) {
     }
 
     revalidatePath("/");
+    revalidatePath(`/profile/${profile.user.username}`);
     return { success: true } as const;
 
   } catch (error) {
@@ -238,7 +239,7 @@ export async function updateComment(commentId: string,content: string, currentUs
       where: { id: commentId },
       data: { content: content.trim() },
       include: {
-        user: {
+        author: {
           select: { id: true, firstname: true, lastname: true, email: true },
         },
       },
@@ -253,5 +254,6 @@ export async function updateComment(commentId: string,content: string, currentUs
     return { success: false, error: error instanceof Error ? error.message : "Failed to update comment" };
   }
 }
+
 
 

@@ -38,7 +38,7 @@ export default async function Home() {
           ) : (
             <div className="flex flex-col gap-6">
               {posts.map((post) => (
-                <PostCard key={post.id} post={{...post,comment: post.comment.map(c => ({...c, author: c.user, })), }} // remap to match PostCard's expected type
+                <PostCard key={post.id} post={{...post,comment: post.comment.map(c => ({...c, author: c.author, })), }} // remap to match PostCard's expected type
                 isAuthor={post.author.id === profile?.user?.id} currentUserId={profile?.user?.id ?? ""} auth={profile?.user ?? null}/>
               ))}
             </div>
