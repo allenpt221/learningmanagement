@@ -86,3 +86,62 @@ export async function updateProfile(formData: FormData): Promise<UserTypeUpdate>
     throw new Error("Failed to update profile");
   }
 }
+
+
+export async function getUserPosts(userId: any) {
+  try {
+    const posts = await prisma.post.findMany({
+      where: {
+        AuthorId: userId,
+      },
+      include: {
+        author: {
+          select: {
+            id: true,
+            firstname: true,
+            lastname: true,
+            username: true,
+            email: true,
+            image: true,
+          },
+        },
+        comment: {
+          include: {
+            author: {
+              select: {
+                id: true,
+                firstname: true,
+                lastname: true,
+                username: true,
+                email: true,
+                image: true,
+              },
+            },
+          },
+          orderBy: {
+            createdAt: "asc",
+          },
+        },
+        likes: {
+          select: {
+            userId: true,
+          },
+        },
+        _count: {
+          select: {
+            likes: true,
+            comment: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    return posts;
+  } catch (error) {
+    console.error("Error fetching user posts:", error);
+    throw new Error("Failed to fetch user posts");
+  }
+}
