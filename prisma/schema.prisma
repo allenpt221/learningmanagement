@@ -51,7 +51,7 @@ model Like {
   userId    String
   createdAt DateTime @default(now())
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  author User @relation(fields: [userId], references: [id], onDelete: Cascade)
   post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
 
   @@index([userId, postId])
@@ -66,7 +66,7 @@ model Comment {
   parentId  String?       // <-- nullable parent comment ID for replies
   createdAt DateTime @default(now())
 
-  user User @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  author User @relation(fields: [authorId], references: [id], onDelete: Cascade)
   post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
 
   // Self-relation for comment replies
