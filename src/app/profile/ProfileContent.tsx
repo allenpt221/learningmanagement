@@ -1,98 +1,129 @@
-'use client'
+"use client";
 
-import React, { useState } from "react"
-import PostContent from "@/components/PostContent"
-import { Post } from "@/generated/prisma"
-import { formatDistanceToNow } from "date-fns"
-import { Dot, MessageCircle, MoreHorizontal, ThumbsUp } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { createComment, toggleLikes, updateComment } from "@/server-action/post.action"
-import { CommentsTree } from "@/components/RenderComments"
+import React, { useState } from "react";
+import PostContent from "@/components/PostContent";
+import { formatDistanceToNow } from "date-fns";
+import { Dot, MessageCircle, MoreHorizontal, ThumbsUp } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { createComment, toggleLikes, updateComment, deletePost,  } from "@/server-action/post.action";
+import { CommentsTree } from "@/components/RenderComments";
+import { PostDropdownMenu } from "@/components/PostDropdownMenu";
 
 interface ProfileProps {
-  post: Post & {
+  post: {
+    id: string;
+    content: string;
+    image?: string | null;
+    createdAt: Date;
     author: {
-      firstname: string
-      lastname: string
-      image: string
-    }
-    likes?: Array<{ id: string } | { userId: string }>
-    comment?: any[]   // From Prisma (singular)
-    _count?: {
-      likes: number
-    }
-  }
-  currentUserId: string
-  authUser: any | null
+      firstname: string;
+      lastname: string;
+      image: string;
+    };
+    likes: { userId: string }[];
+    comment?: any[];
+    _count: { likes: number };
+  };
+  currentUserId: string;
+  authUser: any | null;
+  onPostDeleted?: (postId: string) => void; // optional callback
+  onPostUpdated?: (postId: string, newContent: string) => void;
 }
 
-export function ProfileContent({ post, currentUserId, authUser }: ProfileProps) {
-  const [isLiking, setIsLiking] = useState(false)
+export function ProfileContent({
+  post,
+  currentUserId,
+  authUser,
+  onPostDeleted,
+}: ProfileProps) {
+  const [isLiking, setIsLiking] = useState(false);
   const [hasLiked, setHasLiked] = useState(
-    Array.isArray(post.likes) && post.likes.some(like => (like as { userId: string }).userId === currentUserId)
-  )
+    post.likes.some((like) => like.userId === currentUserId)
+  );
   const [likeCount, setLikeCount] = useState(
-    post._count?.likes ?? (Array.isArray(post.likes) ? post.likes.length : (typeof post.likes === 'number' ? post.likes : 0))
-  )
+    post._count?.likes ?? post.likes.length
+  );
 
-  // Use either `comments` or `comment` from the DB
-  const initialComments = post.comment ?? []
-  const [comments, setComments] = useState(initialComments)
+  const initialComments = post.comment ?? [];
+  const [comments, setComments] = useState(initialComments);
 
-  const [replyToCommentId, setReplyToCommentId] = useState<string | null>(null)
-  const [newComment, setNewComment] = useState("")
-  const [isCommenting, setIsCommenting] = useState(false)
-  const [editingCommentId, setEditingCommentId] = useState<string | null>(null)
-  const [editingContent, setEditingContent] = useState("")
+  const [replyToCommentId, setReplyToCommentId] = useState<string | null>(null);
+  const [newComment, setNewComment] = useState("");
+  const [isCommenting, setIsCommenting] = useState(false);
+  const [editingCommentId, setEditingCommentId] = useState<string | null>(null);
+  const [editingContent, setEditingContent] = useState("");
+
+  const [isShowComment, setIsShowComment] = useState(false);
 
   const handleLike = async () => {
-    if (isLiking) return
-    setIsLiking(true)
+    if (isLiking) return;
+    setIsLiking(true);
     try {
-      const res = await toggleLikes(post.id)
+      const res = await toggleLikes(post.id);
       if (res.success) {
-        setHasLiked(prev => !prev)
-        setLikeCount(count => (hasLiked ? count - 1 : count + 1))
+        setHasLiked((prev) => !prev);
+        setLikeCount((count) => (hasLiked ? count - 1 : count + 1));
       }
     } catch (error) {
-      console.error("Error toggling like:", error)
+      console.error("Error toggling like:", error);
     } finally {
-      setIsLiking(false)
+      setIsLiking(false);
     }
-  }
+  };
 
   const handleAddComment = async (parentId?: string | null) => {
-    if (!newComment.trim()) return
-    setIsCommenting(true)
+    if (!newComment.trim()) return;
+    setIsCommenting(true);
     try {
-      const res = await createComment(post.id, newComment, parentId)
+      const res = await createComment(post.id, newComment, parentId);
       if (res.success) {
-        setComments(prev => [
+        setComments((prev) => [
           ...prev,
-          {
-            ...res.newComment,
-            author: authUser,
-          }
-        ])
-        setNewComment("")
-        setReplyToCommentId(null)
+          { ...res.newComment, author: authUser },
+        ]);
+        setNewComment("");
+        setReplyToCommentId(null);
       } else {
-        alert(res.error || "Failed to add comment")
+        alert(res.error || "Failed to add comment");
       }
     } catch (error) {
-      console.error("Failed to add comment", error)
+      console.error("Failed to add comment", error);
     } finally {
-      setIsCommenting(false)
+      setIsCommenting(false);
     }
-  }
+  };
 
-  const handleUpdateComment = async (commentId: string, content: string, userId: string) => {
-    const res = await updateComment(commentId, content, userId)
+  const handleUpdateComment = async (
+    commentId: string,
+    content: string,
+    userId: string
+  ) => {
+    const res = await updateComment(commentId, content, userId);
     if (!res.success) {
-      alert(res.error || "Failed to update comment")
+      alert(res.error || "Failed to update comment");
     }
-    return res
-  }
+    return res;
+  };
+
+  const handleDeletePost = async () => {
+    const res = await deletePost(post.id);
+    if (res.success) {
+      onPostDeleted?.(post.id);
+    } else {
+      alert("Failed to delete post");
+    }
+  };
+
+  // const handleEditPost = async (newContent: string) => {
+  //   const res = await updatePost(post.id, newContent);
+  //   if (res.success) {
+  //     onPostUpdated?.(post.id, newContent);
+  //   } else {
+  //     alert(res.error || "Failed to update post");
+  //   }
+  // };
+
+  const isAuthor = currentUserId === (authUser?.id ?? "");
 
   return (
     <div className="max-w-3xl mx-auto py-2">
@@ -110,13 +141,22 @@ export function ProfileContent({ post, currentUserId, authUser }: ProfileProps) 
               </p>
               <Dot className="text-gray-400 flex-shrink-0" />
               <span className="text-xs text-gray-500 whitespace-nowrap">
-                {formatDistanceToNow(new Date(post.createdAt), { addSuffix: true })}
+                {formatDistanceToNow(new Date(post.createdAt), {
+                  addSuffix: true,
+                })}
               </span>
             </div>
           </div>
-          <Button variant="ghost" size="icon" className="h-8 w-8">
-            <MoreHorizontal size={16} />
-          </Button>
+
+          {isAuthor ? (
+            <PostDropdownMenu
+              postId={post.id}
+            />
+          ) : (
+            <Button variant="ghost" size="icon" className="h-8 w-8">
+              <MoreHorizontal size={16} />
+            </Button>
+          )}
         </div>
 
         <div className="px-4 pb-2">
@@ -138,7 +178,9 @@ export function ProfileContent({ post, currentUserId, authUser }: ProfileProps) 
             <Button
               variant="ghost"
               size="sm"
-              className={`h-8 gap-1 ${hasLiked ? "text-blue-500" : "text-gray-600 hover:text-blue-500"}`}
+              className={`h-8 gap-1 ${
+                hasLiked ? "text-blue-500" : "text-gray-600 hover:text-blue-500"
+              }`}
               onClick={handleLike}
               disabled={isLiking}
             >
@@ -147,41 +189,70 @@ export function ProfileContent({ post, currentUserId, authUser }: ProfileProps) 
                 className={hasLiked ? "fill-blue-500" : "fill-transparent"}
               />
               <span>{hasLiked ? "Liked" : "Like"}</span>
-              {likeCount > 0 && <span className="text-xs ml-1">({likeCount})</span>}
+              {likeCount > 0 && (
+                <span className="text-xs ml-1">({likeCount})</span>
+              )}
             </Button>
 
             <Button
               variant="ghost"
               size="sm"
               className="h-8 gap-1 text-gray-600 hover:text-blue-500"
-              onClick={() => setReplyToCommentId(null)}
+              onClick={() => setIsShowComment((prev) => !prev)}
             >
               <MessageCircle size={16} />
               <span>Comment</span>
             </Button>
           </div>
         </div>
+        {isShowComment && (
+          <div className="border-t bg-gray-50 p-4"> 
+          <div className="px-4 pb-2">
+            {comments.length > 0 ? (
+              <CommentsTree
+                comments={comments}
+                currentUserId={currentUserId}
+                replyToCommentId={replyToCommentId}
+                setReplyToCommentId={setReplyToCommentId}
+                newComment={newComment}
+                setNewComment={setNewComment}
+                isCommenting={isCommenting}
+                handleAddComment={handleAddComment}
+                editingCommentId={editingCommentId}
+                setEditingCommentId={setEditingCommentId}
+                editingContent={editingContent}
+                setEditingContent={setEditingContent}
+                updateComment={handleUpdateComment}
+                setComments={setComments}
+                auth={authUser}
+              />
+              ) : (
+                <p className="text-gray-500 text-sm">No comments yet</p>
+            )}
+          </div>        
+            {authUser && !replyToCommentId && editingCommentId === null && (
+                <div className="flex gap-2">
+                  <textarea
+                    maxLength={200}
+                    value={newComment}
+                    onChange={(e) => setNewComment(e.target.value)}
+                    placeholder="Write a comment..."
+                    className="flex-1 border rounded px-3 py-2 text-sm"
+                  />
+                  <button
+                    onClick={() => handleAddComment()}
+                    disabled={isCommenting}
+                    className="px-4 py-2 w-[5rem] h-[2.6rem] bg-black text-white rounded text-sm hover:bg-black/50 disabled:bg-black/40"
+                  >
+                    {isCommenting ? "Posting..." : "Post"}
+                  </button>
+                </div>
+              )}
+          </div>
+        )}
+        
 
-        <div className="px-4 py-2">
-          <CommentsTree
-            comments={comments}
-            currentUserId={currentUserId}
-            replyToCommentId={replyToCommentId}
-            setReplyToCommentId={setReplyToCommentId}
-            newComment={newComment}
-            setNewComment={setNewComment}
-            isCommenting={isCommenting}
-            handleAddComment={handleAddComment}
-            editingCommentId={editingCommentId}
-            setEditingCommentId={setEditingCommentId}
-            editingContent={editingContent}
-            setEditingContent={setEditingContent}
-            updateComment={handleUpdateComment}
-            setComments={setComments}
-            auth={authUser}
-          />
-        </div>
       </div>
     </div>
-  )
+  );
 }
