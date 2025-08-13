@@ -24,6 +24,10 @@ model User {
   posts    Post[]
   likes    Like[]
   comment  Comment[]
+
+
+  followers Follows[] @relation("following") // users who follow this user
+  following Follows[] @relation("follower") // users this user follows
 }
 
 enum DepartmentType {
@@ -76,3 +80,17 @@ model Comment {
   @@index([authorId, postId])
   @@index([parentId])
 }
+
+model Follows {
+  followerId String
+  followingId String
+  createdAt DateTime @default(now())
+
+  follower User @relation("follower", fields: [followerId], references: [id], onDelete: Cascade)
+  following User @relation("following", fields: [followingId], references: [id], onDelete: Cascade)
+
+  @@index([followerId,followingId])
+  @@id([followerId, followingId])
+}
+
+
