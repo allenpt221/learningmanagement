@@ -8,7 +8,7 @@ function ProfileModal({ click }: { click: string }) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div>
+    <div className="w-full">
       <button 
       className="border px-3 py-1 rounded bg-black text-white"
       onClick={() => setIsOpen(true)}>

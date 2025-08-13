@@ -208,6 +208,7 @@ export function PostCard({ post, isAuthor, currentUserId, auth }: PostCardProps)
           {auth && !replyToCommentId && editingCommentId === null && (
             <div className="mt-4 flex gap-2">
               <textarea
+                maxLength={280}
                 value={newComment}
                 onChange={(e) => setNewComment(e.target.value)}
                 placeholder="Write a comment..."
