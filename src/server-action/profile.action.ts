@@ -15,27 +15,45 @@ interface UserTypeUpdate {
     }
 }
 
-export async function getProfileByUsername(username: string){
-    try {
-        const user = await prisma.user.findUnique({
-            where: { username: username},
-            select: {
-                id: true,
-                username: true,
-                firstname: true,
-                lastname: true,
-                email: true,
-                image: true,
-                type:true
-            }
-        })
+export async function getProfileByUsername(username: string, currentUserId?: string) {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { username },
+      select: {
+        id: true,
+        username: true,
+        firstname: true,
+        lastname: true,
+        email: true,
+        image: true,
+        type: true,
+        _count: {
+          select: {
+            followers: true,
+            following: true
+          }
+        },
+        followers: {
+          where: {
+            followerId: currentUserId // check if current user follows them
+          },
+          select: { followerId: true }
+        }
+      }
+    });
 
-        return user;
-    } catch (error) {
-        console.error("Error fetching profile:", error);
-        throw new Error("Failed to fetch profile");
-    }
+    if (!user) return null;
+
+    return {
+      ...user,
+      isFollowing: user.followers.length > 0
+    };
+  } catch (error) {
+    console.error("Error fetching profile:", error);
+    throw new Error("Failed to fetch profile");
+  }
 }
+
 
 export async function updateProfile(formData: FormData): Promise<UserTypeUpdate> {
   try {
@@ -143,5 +161,58 @@ export async function getUserPosts(userId: any) {
   } catch (error) {
     console.error("Error fetching user posts:", error);
     throw new Error("Failed to fetch user posts");
+  }
+}
+
+// Fetch all users who follow a specific user
+export async function getFollowers(userId: string) {
+  try {
+    const followers = await prisma.follows.findMany({
+      where: { followingId: userId }, // Only followers of this user
+      select: {
+        follower: {
+          select: {
+            id: true,
+            username: true,
+            firstname: true,
+            lastname: true,
+            image: true,
+            email: true,
+          },
+        },
+      },
+    });
+
+    // Return only the follower info
+    return followers.map(f => f.follower);
+  } catch (error) {
+    console.error("Error fetching followers", error);
+    throw new Error("Failed to fetch user followers");
+  }
+}
+
+// Fetch all users that a specific user is following
+export async function getFollowing(userId: string) {
+  try {
+    const followings = await prisma.follows.findMany({
+      where: { followerId: userId }, // Only users this user is following
+      select: {
+        following: {
+          select: {
+            id: true,
+            username: true,
+            firstname: true,
+            lastname: true,
+            image: true,
+            email: true,
+          },
+        },
+      },
+    });
+
+    return followings.map(f => f.following);
+  } catch (error) {
+    console.error("Error fetching following", error);
+    throw new Error("Failed to fetch user following");
   }
 }
