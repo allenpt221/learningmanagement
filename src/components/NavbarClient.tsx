@@ -109,11 +109,17 @@ export default function NavbarClient({ profile }: { profile: any }) {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-56 rounded-lg shadow-lg border-muted-foreground/20">
                   <DropdownMenuItem asChild className="cursor-pointer hover:bg-muted/50">
-                  {pathname === profileUrl ? (
-                    <span className="w-full px-2 py-1.5">Profile</span>
-                  ) : (
-                    <Link href={`profile/${profile.user?.username}`} className="w-full px-2 py-1.5">Profile</Link>
-                  )}
+                    <Link 
+                      href={profileUrl} 
+                      onClick={() => {
+                        if (pathname.startsWith("/profile/") && pathname !== profileUrl) {
+                          router.push(profileUrl); // force navigation from another profile
+                        }
+                      }}
+                      className="w-full px-2 py-1.5"
+                    >
+                      Profile
+                    </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild className="cursor-pointer hover:bg-muted/50">
                     <Link href="/settings" className="w-full px-2 py-1.5">Settings</Link>
