@@ -160,7 +160,7 @@ export function CommentsTree({
                   <div className="flex gap-2 mt-1">
                     <button
                       onClick={() => handleUpdateComment(comment.id)}
-                      className="px-3 py-1 bg-blue-600 text-white rounded text-xs"
+                      className="px-3 py-1.5 bg-black text-white rounded text-xs"
                     >
                       Save
                     </button>
@@ -169,7 +169,7 @@ export function CommentsTree({
                         setEditingCommentId(null);
                         setEditingContent("");
                       }}
-                      className="px-3 py-1 bg-gray-300 rounded text-xs"
+                      className="px-3 py-1.5 bg-gray-300 rounded text-xs"
                     >
                       Cancel
                     </button>
