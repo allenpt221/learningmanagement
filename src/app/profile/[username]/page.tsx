@@ -57,59 +57,59 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
   const isCurrentUser = profile?.user?.id === user?.id;
 
   return (
-    <div className="max-w-3xl mx-auto py-3 space-y-4">
+    <div className="max-w-3xl mx-auto py-3 space-y-4 px-4">
       {/* Profile Header Section */}
-      <div className="border border-gray-200 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 flex justify-between p-4 bg-white w-full">
-        <div className="flex items-center space-x-4">
-          <div className="flex flex-col items-center space-y-2">
-            <img 
-              src={user.image} 
-              alt={`${user.firstname}'s profile`}
-              className="rounded-full w-20 h-20 object-cover border-2 border-gray-100"
-            />
+      <header className='border border-gray-200 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 flex flex-col p-4 bg-white w-full'>
+        <div className="flex justify-between p-4 w-full">
+          <div className="flex items-center space-x-4">
+            <div className="flex flex-col items-center space-y-2">
+              <img 
+                src={user.image} 
+                alt={`${user.firstname}'s profile`}
+                className="rounded-full w-20 h-20 object-cover border-2 border-gray-100"
+              />
 
-            {/* Department */}
-            <p className="text-xs text-gray-500">
-              {DEPARTMENT_MAP[user.type]}
-            </p>
+              {/* Department */}
+              <p className="text-xs text-gray-500">
+                {DEPARTMENT_MAP[user.type]}
+              </p>
+            </div>
 
-            {/* Edit Profile Button only for current user */}
+            
+            <div className="flex flex-col">
+              <h1 className="text-lg font-semibold text-gray-800">
+                {user.firstname} {user.lastname}
+              </h1>
+              <p className="text-gray-500 text-xs">{user.email}</p>
+
+              {/* Followers / Following counts */}
+              <div className="flex space-x-4 mt-2">
+                <div>
+                  <span className="font-bold">{user._count?.followers ?? 0}</span>{" "}
+                  <span className="text-gray-500 text-xs">Followers</span>
+                </div>
+                <div>
+                  <span className="font-bold">{user._count?.following ?? 0}</span>{" "}
+                  <span className="text-gray-500 text-xs">Following</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+        {/* Follow button (if not current user) */}
+              {!isCurrentUser && (
+                <FollowButton 
+                    targetUserId={user.id} 
+                    isFollowing={user.isFollowing ?? false} 
+                    isLoggedIn={!!profile?.user} 
+                  />
+              )}
+          {/* Edit Profile Button only for current user */}
             {isCurrentUser && (
               <ProfileModal click="Edit Profile" />
             )}
-          </div>
-
-          
-          <div className="flex flex-col">
-            <h1 className="text-lg font-semibold text-gray-800">
-              {user.firstname} {user.lastname}
-            </h1>
-            <p className="text-gray-500 text-xs">{user.email}</p>
-
-            {/* Followers / Following counts */}
-            <div className="flex space-x-4 mt-2">
-              <div>
-                <span className="font-bold">{user._count?.followers ?? 0}</span>{" "}
-                <span className="text-gray-500 text-xs">Followers</span>
-              </div>
-              <div>
-                <span className="font-bold">{user._count?.following ?? 0}</span>{" "}
-                <span className="text-gray-500 text-xs">Following</span>
-              </div>
-            </div>
-
-            {/* Follow button (if not current user) */}
-            {!isCurrentUser && (
-              <FollowButton 
-                  targetUserId={user.id} 
-                  isFollowing={user.isFollowing ?? false} 
-                  isLoggedIn={!!profile?.user} 
-                />
-            )}
-
-          </div>
-        </div>
-      </div>
+      </header>
       
       {/* Posts Section */}
       <div className="space-y-4">
@@ -128,6 +128,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
           </div>
         )}
       </div>
+      
     </div>
   );
 }

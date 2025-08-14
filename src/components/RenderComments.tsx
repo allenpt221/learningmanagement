@@ -115,7 +115,7 @@ export function CommentsTree({
               <p className="text-sm font-medium text-gray-900">
                 {comment.author.firstname} {comment.author.lastname}
               </p>
-              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center">
+              <div className="flex flex-col space-x-5 sm:flex-row sm:justify-between sm:items-center">
                 {editingCommentId === comment.id ? (
                   <input
                     type="text"
@@ -128,9 +128,9 @@ export function CommentsTree({
                     {comment.content}
                   </span>
                 )}
-                <span className="text-xs text-gray-500 whitespace-nowrap mt-1 sm:mt-0">
+                <p className="text-xs text-gray-500 whitespace-nowrap mt-auto">
                   {formatDistanceToNow(new Date(comment.createdAt), { addSuffix: true })}
-                </span>
+                </p>
               </div>
 
               <div className="flex flex-col w-[10rem]">
