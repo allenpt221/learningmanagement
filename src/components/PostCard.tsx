@@ -12,6 +12,7 @@ import { Post as PrismaPost, User, Comment as PrismaComment, DepartmentType } fr
 import { Alert, AlertDescription, AlertTitle } from "./ui/alert";
 import { CommentsTree } from "./RenderComments";
 import { Button } from "./ui/button";
+import Link from "next/link";
 
 type CommentWithAuthor = PrismaComment & { author: User };
 
@@ -115,11 +116,13 @@ export function PostCard({ post, isAuthor, currentUserId, auth }: PostCardProps)
       {/* Post Header */}
       <div className="flex items-center p-4 border-b">
         <div className="relative w-10 h-10 rounded-full overflow-hidden">
-          <img
-            src={post.author.image || "/default-avatar.png"}
-            alt={`${post.author.firstname}'s profile`}
-            className="object-cover w-full h-full"
-          />
+        <Link href={`profile/${post.author.username}`}>
+            <img
+              src={post.author.image || "/default-avatar.png"}
+              alt={`${post.author.firstname}'s profile`}
+              className="object-cover w-full h-full"
+            />
+        </Link>
         </div>
         <Dot className="text-gray-400" />
         <div className="flex-1 min-w-0">
