@@ -10,7 +10,7 @@ function ProfileModal({ click }: { click: string }) {
   return (
     <div className="w-full">
       <button 
-      className="border px-3 py-1 rounded bg-black text-white"
+      className="border px-3 py-1 rounded bg-black text-white w-full"
       onClick={() => setIsOpen(true)}>
         {click}
       </button>

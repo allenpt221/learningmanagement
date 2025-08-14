@@ -29,7 +29,8 @@ export default function FollowButton({ targetUserId, isFollowing, isLoggedIn }: 
   return (
     <button
       onClick={handleClick}
-      className="mt-2 px-4 py-1 bg-black text-white rounded hover:bg-black/50 transition text-xs"
+      className={`mt-2 px-4 py-2 font-medium  rounded  transition sm:text-sm text-xs
+        ${following ? 'border bg-white text-black hover:bg-muted' : 'bg-black text-white hover:bg-black/60'}`}
     >
       {following ? "Unfollow" : "Follow"}
     </button>
