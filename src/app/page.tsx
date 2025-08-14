@@ -20,7 +20,7 @@ export default async function Home() {
 
 
   return (
-    <div className="flex max-w-6xl mx-auto px-4 py-8 gap-8">
+    <div className="flex max-w-6xl mx-auto px-4 py-8 gap-8 w-full">
       {/* Main Content */}
       <main className="flex-1">
         {profile?.user && (

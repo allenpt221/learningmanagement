@@ -38,7 +38,7 @@ export default function NavbarClient({ profile }: { profile: any }) {
 
   return (
     <header className="sticky top-0 z-50 border-b bg-white/95 backdrop-blur-sm">
-      <div className="container mx-auto flex h-16 items-center justify-between px-4">
+      <div className="mx-auto flex h-16 items-center justify-between lg:px-52 px-3">
         {/* Logo */}
     <div className='flex items-center gap-6'>
       <Link 
@@ -70,18 +70,6 @@ export default function NavbarClient({ profile }: { profile: any }) {
         </Link>
       </nav>
     </div>
-
-        {/* Search Bar */}
-        <div className={`flex relative w-full max-w-md mx-4 transition-all duration-200 ${searchFocused ? 'scale-[1.02]' : ''}`}>
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4" />
-          <Input 
-            type="text" 
-            placeholder="Search courses..." 
-            className="pl-10 h-9 text-sm rounded-lg border-muted-foreground/30 focus-visible:ring-primary/50"
-            onFocus={() => setSearchFocused(true)}
-            onBlur={() => setSearchFocused(false)}
-          />
-        </div>
 
         {/* Navigation */}
         <nav className="flex items-center space-x-2">
