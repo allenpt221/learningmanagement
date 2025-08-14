@@ -5,6 +5,7 @@ import { getProfile, getRandomUsers } from "@/server-action/auth.action";
 import { getPostsByDepartmentType, getThePost } from "@/server-action/post.action";
 import { PostCard } from "@/components/PostCard";
 import FollowButton from "@/components/FollowButton";
+import Link from "next/link";
 
 export default async function Home() {
   const profile = await getProfile();
@@ -34,6 +35,38 @@ export default async function Home() {
             />
           </div>
         )}
+
+              {profile?.user && randomUsers.length > 0 && (
+                <aside className="xl:hidden lg:block w-full h-fit max-h-[10rem] overflow-hidden overflow-y-auto space-y-4 py-3 px-4 bg-white dark:bg-gray-900 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+                  <div className="flex items-center justify-between mb-2">
+                    <h2 className="text-xl font-bold text-gray-800 dark:text-white">Suggested follow</h2>
+                  </div>
+
+                  {randomUsers.map((user) => (
+                    <div key={user.id} className="space-y-3">
+                      <div className="flex lg:flex-row flex-col lg:items-center gap-2 justify-between p-2 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors">
+                        <Link href={`profile/${user.username}`}>
+                          <div className="flex items-center space-x-3">
+                              <div className="w-10 h-10 rounded-full bg-gray-300 dark:bg-gray-600 overflow-hidden ">
+                                <img src={user.image} alt={`invalid fetch image: ${user.username}`} />
+                              </div>
+                              <div>
+                                <h3 className="font-medium text-gray-900 dark:text-white">{user.username}</h3>
+                                <p className="text-sm text-gray-500 dark:text-gray-400">{user.email}</p>
+                              </div>
+                          </div>
+                        </Link>
+
+                        <FollowButton 
+                          targetUserId={user.id}
+                          isFollowing={user.isFollowing}
+                          isLoggedIn={!!profile.user}  
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </aside>
+              )}
         
         <section className="bg-white rounded-lg shadow sm:p-6 p-2">
           <h2 className="text-2xl font-semibold mb-6 text-gray-800">Recent Posts</h2>
@@ -63,7 +96,7 @@ export default async function Home() {
 
       {/* Sidebar */}
       {profile?.user && randomUsers.length > 0 && (
-        <aside className="lg:block hidden w-[25rem] h-fit space-y-4 py-3 px-4 bg-white dark:bg-gray-900 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+        <aside className="xl:block hidden w-[25rem] h-fit space-y-4 py-3 px-4 bg-white dark:bg-gray-900 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
           <div className="flex items-center justify-between mb-2">
             <h2 className="text-xl font-bold text-gray-800 dark:text-white">Suggested follow</h2>
           </div>
@@ -71,15 +104,17 @@ export default async function Home() {
           {randomUsers.map((user) => (
             <div key={user.id} className="space-y-3">
               <div className="flex lg:flex-row flex-col lg:items-center gap-2 justify-between p-2 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors">
-                <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 rounded-full bg-gray-300 dark:bg-gray-600 overflow-hidden">
-                    <img src={user.image} alt={`invalid fetch image: ${user.username}`} />
+                <Link href={`profile/${user.username}`}>
+                  <div className="flex items-center space-x-3">
+                      <div className="w-10 h-10 rounded-full bg-gray-300 dark:bg-gray-600 overflow-hidden">
+                        <img src={user.image} alt={`invalid fetch image: ${user.username}`} />
+                      </div>
+                      <div>
+                        <h3 className="font-medium text-gray-900 dark:text-white">{user.username}</h3>
+                        <p className="text-sm text-gray-500 dark:text-gray-400">{user.email}</p>
+                      </div>
                   </div>
-                  <div>
-                    <h3 className="font-medium text-gray-900 dark:text-white">{user.username}</h3>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">{user.email}</p>
-                  </div>
-                </div>
+                </Link>
 
                 <FollowButton 
                   targetUserId={user.id}

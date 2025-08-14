@@ -80,22 +80,21 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
             </div>
 
             
-            <div className="flex flex-col">
+            <div className="flex flex-col ">
               <h1 className="text-lg font-semibold text-gray-800">
                 {user.firstname} {user.lastname}
               </h1>
               <p className="text-gray-500 text-xs">{user.email}</p>
-
               {/* Followers / Following counts */}
               <div className="flex space-x-4 mt-2">
                 <div>
                   <span className="font-bold">{user._count?.followers ?? 0}</span>{" "}
-                  <span className="text-gray-500 text-xs"><Follower follower={followers} profileAuth={profile.user}/></span>
+                  <span className="text-gray-500 text-xs"><Follower follower={followers} /></span>
                 </div>
                 <div>
                   <span className="font-bold">{user._count?.following ?? 0}</span>{" "}
                   <span className="text-gray-500 text-xs">
-                    <Following following={followings} profileAuth={profile.user}/>
+                    <Following following={followings}/>
                   </span>
                 </div>
               </div>

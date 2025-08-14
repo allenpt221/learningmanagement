@@ -198,7 +198,7 @@ export function CommentsTree({
                     <button
                       onClick={() => handleAddComment(comment.id)}
                       disabled={isCommenting}
-                      className="px-4 py-2 w-[5rem] h-[3rem] bg-black text-white rounded text-sm hover:bg-black/50 disabled:bg-black/40"
+                      className="px-4 sm:py-2 py-1 w-[5rem] sm:h-[3rem] h-[2rem] bg-black text-white rounded text-sm hover:bg-black/50 disabled:bg-black/40"
                     >
                       {isCommenting ? "Posting..." : "Reply"}
                     </button>
@@ -207,7 +207,7 @@ export function CommentsTree({
                         setReplyToCommentId(null);
                         setNewComment("");
                       }}
-                      className="px-2 py-2 text-sm w-[5rem] h-[3rem] rounded text-gray-500 hover:bg-black/10"
+                      className="px-2 sm:py-2 py-1 text-sm w-[5rem] sm:h-[3rem] h-[2rem] rounded text-gray-500 hover:bg-black/10"
                     >
                       Cancel
                     </button>

@@ -178,6 +178,7 @@ export async function getFollowers(userId: string) {
             lastname: true,
             image: true,
             email: true,
+            type: true
           },
         },
       },
@@ -205,6 +206,7 @@ export async function getFollowing(userId: string) {
             lastname: true,
             image: true,
             email: true,
+            type: true,
           },
         },
       },

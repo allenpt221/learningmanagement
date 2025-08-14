@@ -26,7 +26,6 @@ interface ProfileProps {
   };
   currentUserId: string;
   authUser: any | null;
-  onPostDeleted?: (postId: string) => void; // optional callback
   onPostUpdated?: (postId: string, newContent: string) => void;
 }
 
@@ -34,7 +33,6 @@ export function ProfileContent({
   post,
   currentUserId,
   authUser,
-  onPostDeleted,
 }: ProfileProps) {
   const [isLiking, setIsLiking] = useState(false);
   const [hasLiked, setHasLiked] = useState(
@@ -105,23 +103,6 @@ export function ProfileContent({
     return res;
   };
 
-  const handleDeletePost = async () => {
-    const res = await deletePost(post.id);
-    if (res.success) {
-      onPostDeleted?.(post.id);
-    } else {
-      alert("Failed to delete post");
-    }
-  };
-
-  // const handleEditPost = async (newContent: string) => {
-  //   const res = await updatePost(post.id, newContent);
-  //   if (res.success) {
-  //     onPostUpdated?.(post.id, newContent);
-  //   } else {
-  //     alert(res.error || "Failed to update post");
-  //   }
-  // };
 
   const isAuthor = currentUserId === (authUser?.id ?? "");
 
@@ -202,6 +183,9 @@ export function ProfileContent({
             >
               <MessageCircle size={16} />
               <span>Comment</span>
+              {comments.length > 0 && (
+                <span>({comments.length})</span>
+              )}
             </Button>
           </div>
         </div>
@@ -239,13 +223,13 @@ export function ProfileContent({
                     placeholder="Write a comment..."
                     className="flex-1 border rounded px-3 py-2 text-sm"
                   />
-                  <button
+                  <Button
                     onClick={() => handleAddComment()}
                     disabled={isCommenting}
                     className="px-4 py-2 w-[5rem] h-[2.6rem] bg-black text-white rounded text-sm hover:bg-black/50 disabled:bg-black/40"
                   >
-                    {isCommenting ? "Posting..." : "Post"}
-                  </button>
+                      {isCommenting ? "Posting..." : "Post"}
+                  </Button>
                 </div>
               )}
           </div>

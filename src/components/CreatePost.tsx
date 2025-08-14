@@ -43,7 +43,6 @@ function CreatePost({ image, firstname, lastname }: ProfileType) {
   const handleRemoveImage = (index: number) => {
     setPostImageFiles((files) => files.filter((_, i) => i !== index));
     setPostImagePreviews((previews) => {
-      // Revoke object URL to free memory
       URL.revokeObjectURL(previews[index]);
       return previews.filter((_, i) => i !== index);
     });
@@ -112,7 +111,7 @@ function CreatePost({ image, firstname, lastname }: ProfileType) {
                 <img
                   src={preview}
                   alt={`Post preview ${index + 1}`}
-                  className="object-cover w-full h-24 rounded-lg border"
+                  className="object-cover w-full h-60 rounded-lg border"
                 />
                 <button
                   type="button"

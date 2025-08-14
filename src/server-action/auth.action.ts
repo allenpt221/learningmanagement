@@ -267,59 +267,61 @@ export async function getRandomUsers() {
   }
 }
 
-export async function toggleFollow(targetUserId: string){
+export async function toggleFollow(targetUserId: string) {
   try {
-    
     const profile = await getProfile();
-    
-       if (!profile.user?.id) {
-        return { success: false, error: "Not authenticated" };
-      }
 
-    if (profile.user?.id === targetUserId) throw new Error("You cannot follow yourself");
+    if (!profile.user?.id) {
+      return { success: false, error: "Not authenticated" };
+    }
 
-    const existingFolow = await prisma.follows.findUnique({
+    if (profile.user?.id === targetUserId) {
+      throw new Error("You cannot follow yourself");
+    }
+
+    const existingFollow = await prisma.follows.findUnique({
       where: {
         followerId_followingId: {
-          followerId:  profile.user?.id,
-          followingId: targetUserId
-        }
-      }
+          followerId: profile.user.id,
+          followingId: targetUserId,
+        },
+      },
     });
 
-
-    if(existingFolow){
+    if (existingFollow) {
       await prisma.follows.delete({
         where: {
           followerId_followingId: {
-            followerId: profile.user?.id,
-            followingId: targetUserId
-          }
-        }
-      })
+            followerId: profile.user.id,
+            followingId: targetUserId,
+          },
+        },
+      });
     } else {
-
-        await prisma.$transaction([
-          prisma.follows.create({
-            data: {
-              followerId: profile.user?.id,
-              followingId: targetUserId
-            }
-          }),
-          prisma.notification.create({
-            data: {
-              type: "FOLLOW",
-              userId: targetUserId,
-              creatorId: profile.user?.id
-            }
-          })
-        ]);
+      await prisma.$transaction([
+        prisma.follows.create({
+          data: {
+            followerId: profile.user.id,
+            followingId: targetUserId,
+          },
+        }),
+        prisma.notification.create({
+          data: {
+            type: "FOLLOW",
+            userId: targetUserId,
+            creatorId: profile.user.id,
+            postId: null, // explicit for type consistency
+            read: false,
+            createdAt: new Date(),
+          },
+        }),
+      ]);
     }
 
     revalidatePath("/");
     return { success: true };
   } catch (error) {
-    console.log("Error in toggleFollow", error);
+    console.error("Error in toggleFollow", error);
     return { success: false, error: "Error toggling follow" };
   }
 }

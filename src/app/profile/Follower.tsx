@@ -4,10 +4,9 @@ import React, { useState } from 'react'
 
 interface FollowingProps {
   follower: any[]; // Array of followings
-  profileAuth: any
 }
 
-function Follower({ follower, profileAuth }: FollowingProps) {
+function Follower({ follower,  }: FollowingProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -24,7 +23,6 @@ function Follower({ follower, profileAuth }: FollowingProps) {
           isOpen={isOpen}
           isClose={() => setIsOpen(false)}
           followers={follower}
-          profile={profileAuth}
         />
       )}
     </>

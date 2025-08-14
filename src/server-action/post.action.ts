@@ -163,9 +163,25 @@ export async function toggleLikes(postId: string) {
         where: { userId_postId: { userId, postId } }
       });
     } else {
-      await prisma.like.create({
-        data: { userId, postId }
-      });
+      await prisma.$transaction([
+        prisma.like.create({
+         data: { userId, postId }
+       }),
+       ...(post.AuthorId !== userId
+          ? [
+              prisma.notification.create({
+                data: {
+                  type: "LIKE",
+                  userId: post.AuthorId,
+                  creatorId: userId,        
+                  postId
+                }
+              })
+            ]
+          : [])
+
+
+      ])
     }
 
     revalidatePath("/");
@@ -178,10 +194,9 @@ export async function toggleLikes(postId: string) {
   }
 }
 
-export async function createComment(postId: string, content: string, parentId?: string | null){
+export async function createComment(postId: string, content: string, parentId?: string | null) {
   try {
     const profile = await getProfile();
-
     if (!profile.success || !profile.user) {
       return { success: false, error: "Unauthorized" } as const;
     }
@@ -193,26 +208,42 @@ export async function createComment(postId: string, content: string, parentId?: 
       select: { AuthorId: true },
     });
 
-    const newComment = await prisma.comment.create({
+    if (!post) {
+      return { success: false, error: "Post not found" } as const;
+    }
+
+    const [createdComment] = await prisma.$transaction([
+      prisma.comment.create({
         data: {
           content,
           authorId: userId,
           postId,
           parentId
-        },
-      });
-
-    if (!post) throw new Error("Post not found");
-
+        }
+      }),
+      ...(post.AuthorId !== userId
+        ? [
+            prisma.notification.create({
+              data: {
+                type: "COMMENT",
+                userId: post.AuthorId, // recipient
+                creatorId: userId,     // creator
+                postId
+              }
+            })
+          ]
+        : [])
+    ]);
 
     revalidatePath(`/`);
-    return { success: true, newComment };
+    return { success: true, newComment: createdComment };
 
   } catch (error) {
-    console.error("Failed to comment in post:", error);
-    return { success: false, error: "Failed to comment " } as const;
+    console.error("Failed to comment on post:", error);
+    return { success: false, error: "Failed to comment" } as const;
   }
-} 
+}
+
 
 export async function updateComment(commentId: string,content: string, currentUserId: string) {
   try {
@@ -255,5 +286,53 @@ export async function updateComment(commentId: string,content: string, currentUs
   }
 }
 
+export async function getNotifications() {
+  try {
+    const profile = await getProfile();
+    if (!profile.success || !profile.user) {
+      return { success: false, error: "Unauthorized" } as const;
+    }
+
+    const userId = profile.user.id;
+
+    const notifications = await prisma.notification.findMany({
+      where: { userId }, // recipient
+      orderBy: { createdAt: "desc" },
+      include: {
+        creator: { // user who triggered the notification
+          select: { id: true, username: true, firstname: true, lastname: true, image: true }
+        },
+        post: { // if linked to a post
+          select: { id: true, content: true, image: true }
+        },
+      }
+    });
+
+    return { success: true, notifications };
+  } catch (error) {
+    console.error("Failed to get notifications:", error);
+    return { success: false, error: "Failed to fetch notifications" } as const;
+  }
+}
+
+export async function markNotificationsAsRead(notificationIds: string[]) {
+  try {
+    await prisma.notification.updateMany({
+      where: {
+        id: {
+          in: notificationIds,
+        },
+      },
+      data: {
+        read: true,
+      },
+    });
+
+    return { success: true };
+  } catch (error) {
+    console.error("Error marking notifications as read:", error);
+    return { success: false };
+  }
+}
 
 
