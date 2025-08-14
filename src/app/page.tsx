@@ -1,4 +1,3 @@
-
 // app/page.tsx
 
 import CreatePost from "@/components/CreatePost";
@@ -7,20 +6,23 @@ import { getPostsByDepartmentType, getThePost } from "@/server-action/post.actio
 import { PostCard } from "@/components/PostCard";
 import FollowButton from "@/components/FollowButton";
 
-
 export default async function Home() {
   const profile = await getProfile();
   const posts = profile?.user
     ? await getPostsByDepartmentType(profile.user.type) 
     : await getThePost();
 
-  const randomUsers = await getRandomUsers();
 
+  const randomUsersRaw = await getRandomUsers();
 
-
+  // Add isFollowing explicitly (all suggestions are not followed yet)
+  const randomUsers = randomUsersRaw.map(user => ({
+    ...user,
+    isFollowing: false
+  }));
 
   return (
-    <div className="flex max-w-6xl mx-auto px-4 py-8 gap-8 w-full">
+    <div className="flex max-w-7xl mx-auto px-4 py-8 gap-8 w-full">
       {/* Main Content */}
       <main className="flex-1">
         {profile?.user && (
@@ -43,8 +45,16 @@ export default async function Home() {
           ) : (
             <div className="flex flex-col gap-6">
               {posts.map((post) => (
-                <PostCard key={post.id} post={{...post,comment: post.comment.map(c => ({...c, author: c.author, })), }} // remap to match PostCard's expected type
-                isAuthor={post.author.id === profile?.user?.id} currentUserId={profile?.user?.id ?? ""} auth={profile?.user ?? null}/>
+                <PostCard 
+                  key={post.id} 
+                  post={{
+                    ...post,
+                    comment: post.comment.map(c => ({ ...c, author: c.author }))
+                  }} 
+                  isAuthor={post.author.id === profile?.user?.id} 
+                  currentUserId={profile?.user?.id ?? ""} 
+                  auth={profile?.user ?? null}
+                />
               ))}
             </div>
           )}
@@ -52,39 +62,35 @@ export default async function Home() {
       </main>
 
       {/* Sidebar */}
-      {profile?.user && (
-        <aside className="lg:block hidden w-80  h-fit space-y-4 p-4 bg-white dark:bg-gray-900 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
-            <div className="flex items-center justify-between mb-2">
-              <h2 className="text-xl font-bold text-gray-800 dark:text-white">Who to follow</h2>
-              <button className="text-sm text-blue-500 hover:text-blue-700 dark:hover:text-blue-400">
-                Refresh
-              </button>
-            </div>
-          {randomUsers.map((users) => (
-              <div className="space-y-3">
-                {/* Sample follow suggestion - repeat this block for each suggestion */}
-                <div className="flex lg:flex-row flex-col lg:items-center gap-2 justify-between p-2 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 rounded-full bg-gray-300 dark:bg-gray-600 overflow-hidden">
-                      <img src={users.image} alt={`invalid fetch image:${users.username}`}  />
-                    </div>
-                    <div>
-                      <h3 className="font-medium text-gray-900 dark:text-white">{users.username}</h3>
-                      <p className="text-sm text-gray-500 dark:text-gray-400">{users.email}</p>
-                    </div>
+      {profile?.user && randomUsers.length > 0 && (
+        <aside className="lg:block hidden w-[25rem] h-fit space-y-4 py-3 px-4 bg-white dark:bg-gray-900 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+          <div className="flex items-center justify-between mb-2">
+            <h2 className="text-xl font-bold text-gray-800 dark:text-white">Suggested follow</h2>
+          </div>
+
+          {randomUsers.map((user) => (
+            <div key={user.id} className="space-y-3">
+              <div className="flex lg:flex-row flex-col lg:items-center gap-2 justify-between p-2 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors">
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 rounded-full bg-gray-300 dark:bg-gray-600 overflow-hidden">
+                    <img src={user.image} alt={`invalid fetch image: ${user.username}`} />
                   </div>
-                    <FollowButton 
-                    targetUserId={users.id}
-                    isLoggedIn={!!profile.user}  />
+                  <div>
+                    <h3 className="font-medium text-gray-900 dark:text-white">{user.username}</h3>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">{user.email}</p>
+                  </div>
                 </div>
+
+                <FollowButton 
+                  targetUserId={user.id}
+                  isFollowing={user.isFollowing}
+                  isLoggedIn={!!profile.user}  
+                />
               </div>
+            </div>
           ))}
         </aside>
       )}
     </div>
   );
 }
-
-
-
-

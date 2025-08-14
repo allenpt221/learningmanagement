@@ -5,6 +5,8 @@ import ProfileModal from '../ProfileModal';
 import type { Metadata } from 'next';
 import { ProfileContent } from '../ProfileContent';
 import FollowButton from '@/components/FollowButton';
+import Following from '../Following';
+import Follower from '../Follower';
 
 // Constants
 const DEPARTMENT_MAP = {
@@ -40,9 +42,11 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
     notFound();
   }
 
+
   const followers = await getFollowers(user.id);
 
   const followings = await getFollowing(user.id);
+
 
   const userPosts = await getUserPosts(user.id);
 
@@ -86,29 +90,31 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
               <div className="flex space-x-4 mt-2">
                 <div>
                   <span className="font-bold">{user._count?.followers ?? 0}</span>{" "}
-                  <span className="text-gray-500 text-xs">Followers</span>
+                  <span className="text-gray-500 text-xs"><Follower follower={followers} profileAuth={profile.user}/></span>
                 </div>
                 <div>
                   <span className="font-bold">{user._count?.following ?? 0}</span>{" "}
-                  <span className="text-gray-500 text-xs">Following</span>
+                  <span className="text-gray-500 text-xs">
+                    <Following following={followings} profileAuth={profile.user}/>
+                  </span>
                 </div>
               </div>
 
             </div>
           </div>
         </div>
-        {/* Follow button (if not current user) */}
+              {/* Follow button (if not current user) */}
               {!isCurrentUser && (
                 <FollowButton 
                     targetUserId={user.id} 
-                    isFollowing={user.isFollowing ?? false} 
+                    isFollowing={user.isFollowing} 
                     isLoggedIn={!!profile?.user} 
                   />
               )}
-          {/* Edit Profile Button only for current user */}
-            {isCurrentUser && (
-              <ProfileModal click="Edit Profile" />
-            )}
+              {/* Edit Profile Button only for current user */}
+              {isCurrentUser && (
+                <ProfileModal click="Edit Profile" />
+              )}
       </header>
       
       {/* Posts Section */}
