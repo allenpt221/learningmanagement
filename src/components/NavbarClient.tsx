@@ -38,11 +38,11 @@ type NotificationWithCreator = {
 };
 
 export default function NavbarClient({ profile, notif = [] }: { profile: any, notif: NotificationWithCreator[] }) {
-  const pathname = usePathname();
   const router = useRouter();
 
   const [isOpen, setIsOpen] = useState(false);
   const [notifications, setNotifications] = useState<NotificationWithCreator[]>(notif);
+
   const profileUrl = `/profile/${profile.user?.username}`;
 
   const handleLogout = async () => {
@@ -102,7 +102,9 @@ export default function NavbarClient({ profile, notif = [] }: { profile: any, no
                   <DropdownMenuSeparator />
                   {notifications.length > 0 ? (
                     notifications.map((notify) => (
-                      <DropdownMenuItem key={notify.id} className="flex items-center gap-3 px-3 py-2 hover:bg-muted/50">
+                      <DropdownMenuItem key={notify.id} 
+                      onClick={() => router.push(`/notification/${notify.id}`)}
+                      className="flex items-center gap-3 px-3 py-2 hover:bg-muted/50">
                         <Avatar className="h-8 w-8">
                           <AvatarImage src={notify.creator?.image || ''} />
                           <AvatarFallback>{notify.creator?.username?.charAt(0).toUpperCase() ?? "?"}</AvatarFallback>

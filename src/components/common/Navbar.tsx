@@ -5,9 +5,9 @@ import { getNotifications } from '@/server-action/post.action';
 
 export default async function Navbar() {
   const profile = await getProfile();
-  const notifResult = await getNotifications();
-  const notifications = notifResult.success ? notifResult.notifications : [];
+    const notifResult = await getNotifications();
+    const notifications = notifResult.success ? notifResult.notifications : [];
 
-  console.log(notifications);
-  return <NavbarClient profile={profile} notif={notifications} />;
+    return <NavbarClient profile={profile} notif={notifications} />;
+
 }

@@ -212,28 +212,29 @@ export async function createComment(postId: string, content: string, parentId?: 
       return { success: false, error: "Post not found" } as const;
     }
 
-    const [createdComment] = await prisma.$transaction([
-      prisma.comment.create({
+    const createdComment = await prisma.comment.create({
+      data: {
+        content,
+        authorId: userId,
+        postId,
+        parentId,
+      },
+      include: { author: true },
+    });
+
+    if (post.AuthorId !== userId) {
+      await prisma.notification.create({
         data: {
-          content,
-          authorId: userId,
+          type: "COMMENT",
+          userId: post.AuthorId,
+          creatorId: userId,
           postId,
-          parentId
-        }
-      }),
-      ...(post.AuthorId !== userId
-        ? [
-            prisma.notification.create({
-              data: {
-                type: "COMMENT",
-                userId: post.AuthorId, // recipient
-                creatorId: userId,     // creator
-                postId
-              }
-            })
-          ]
-        : [])
-    ]);
+          commentId: createdComment.id,
+        },
+      });
+    }
+
+
 
     revalidatePath(`/`);
     return { success: true, newComment: createdComment };
@@ -303,8 +304,20 @@ export async function getNotifications() {
           select: { id: true, username: true, firstname: true, lastname: true, image: true }
         },
         post: { // if linked to a post
-          select: { id: true, content: true, image: true }
+          select: { 
+            id: true, content: true, image: true, 
+          },
         },
+        comment: {
+          select: {
+            id: true,
+            content: true,
+            authorId: true,
+            postId: true,
+            createdAt: true,
+          }
+        }
+
       }
     });
 
@@ -332,6 +345,57 @@ export async function markNotificationsAsRead(notificationIds: string[]) {
   } catch (error) {
     console.error("Error marking notifications as read:", error);
     return { success: false };
+  }
+}
+
+
+export async function getNotificationById(id: string) {
+  try {
+    const notification = await prisma.notification.findUnique({
+      where: { id },
+      include: {
+        creator: {
+          select: {
+            id: true,
+            username: true,
+            firstname: true,
+            lastname: true,
+            image: true,
+          },
+        },
+        post: {
+          select: {
+            id: true,
+            content: true,
+            image: true,
+            author: { // user who owns the post
+              select: { id: true, username: true, firstname: true, lastname: true, image: true }
+            },
+            comment: {
+              select: {
+                id: true,
+                content: true,
+                createdAt: true,
+              },
+            },
+          },
+        },
+        comment: {
+          select: {
+            id: true,
+            content: true,
+            createdAt: true,
+          },
+        },
+      },
+    });
+
+    if (!notification) return null;
+
+    return notification;
+  } catch (error) {
+    console.error("Failed to fetch notification:", error);
+    return null;
   }
 }
 
