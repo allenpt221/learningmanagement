@@ -23,6 +23,17 @@ type PostWithAuthorLikesComments = PrismaPost & {
   comment: CommentWithAuthor[];
 };
 
+type SafeAuthor = {
+  id: string;
+  firstname: string;
+  lastname: string;
+  email: string;
+  username: string;
+  type: DepartmentType;
+  image: string;
+  createdAt: Date;
+};
+
 type AuthUser = {
   id: string;
   firstname: string;
@@ -82,14 +93,26 @@ export function PostCard({ post, isAuthor, currentUserId, auth }: PostCardProps)
   }
 
   async function handleAddComment(parentId?: string | null) {
-    if (!newComment.trim() || isCommenting) return;
+    if (!newComment.trim() || isCommenting || !auth) return;
     setIsCommenting(true);
 
     const res = await createComment(post.id, newComment, parentId ?? null);
     if (res.success && res.newComment) {
+
+      const safeAuthor: SafeAuthor = {
+        id: auth.id,
+        firstname: auth.firstname,
+        lastname: auth.lastname,
+        email: auth.email,
+        username: auth.username,
+        type: auth.type,
+        image: auth.image,
+        createdAt: auth.createdAt,
+      };
+
       setComments((prev) => [
         ...prev,
-        { ...res.newComment, author: { ...post.author, id: currentUserId } }, // mock author info
+        { ...res.newComment, author: safeAuthor } as CommentWithAuthor,
       ]);
       setNewComment("");
       setReplyToCommentId(null);
@@ -178,6 +201,10 @@ export function PostCard({ post, isAuthor, currentUserId, auth }: PostCardProps)
                 <span className="text-xs ml-1">({comments.length})</span>
               )}
             </Button>
+          </div>
+
+          <div className="text-xs text-gray-500">
+            {formatDistanceToNow(new Date(post.createdAt) , { addSuffix: true })}
           </div>
         </div>
       </div>
