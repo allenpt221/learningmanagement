@@ -10,15 +10,15 @@ async function PersonalInfo() {
 
     
     return (
-        <div className="space-y-8">
+        <div className="space-y-8 w-full">
             {/* Profile Picture Section */}
-            <div className='flex flex-col md:flex-row justify-between items-start gap-6'>
+            <div className='flex flex-col md:flex-row justify-between md:items-start items-center gap-6'>
                 <div className='flex-1 space-y-2'>
                     <div className='flex items-center gap-2 text-gray-700'>
                         <p className="font-medium">Your Profile Picture</p>
                         <CircleQuestionMark className="w-4 h-4 text-gray-400" />
                     </div>
-                    <p className='text-sm text-gray-500'>
+                    <p className=' text-gray-500 sm:text-base text-xs'>
                         This will be your display picture. Change your display picture into Profile.
                     </p>
                 </div>
@@ -36,33 +36,33 @@ async function PersonalInfo() {
             {/* Profile Name Section */}
             <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
                 <div>
-                    <h3 className="font-medium text-gray-700">Profile Name</h3>
+                    <h3 className="font-medium text-gray-700 sm:text-base text-xs">Profile Name</h3>
                 </div>
                 <div className='space-y-4'>
                     <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
                         <div className='space-y-2'>
-                            <Label className="text-gray-600">Firstname</Label>
+                            <Label className="text-gray-600 sm:text-base text-xs">Firstname</Label>
                             <Input 
                                 value={profile.user?.firstname || ''}
                                 readOnly
-                                className="bg-gray-50"
+                                className="bg-gray-50 sm:text-base text-xs"
                             />
                         </div>
                         <div className='space-y-2'>
-                            <Label className="text-gray-600">Lastname</Label>
+                            <Label className="text-gray-600 sm:text-base text-xs">Lastname</Label>
                             <Input 
                                 value={profile.user?.lastname || ''}
                                 readOnly
-                                className="bg-gray-50"
+                                className="bg-gray-50 sm:text-base text-xs"
                             />
                         </div>
                     </div>
                     <div className='space-y-2'>
-                        <Label className="text-gray-600">Username</Label>
+                        <Label className="text-gray-600 sm:text-base text-xs">Username</Label>
                         <Input 
                             value={profile.user?.username || ''}
                             readOnly
-                            className="bg-gray-50"
+                            className="bg-gray-50 sm:text-base text-xs"
                         />
                     </div>
                 </div>  
@@ -73,14 +73,14 @@ async function PersonalInfo() {
             {/* Email Section */}
             <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
                 <div>
-                    <h3 className="font-medium text-gray-700">Email Address</h3>
+                    <h3 className="font-medium text-gray-700 sm:text-base text-xs">Email Address</h3>
                 </div>
                 <div className='space-y-2'>
-                    <Label className="text-gray-600">Email</Label>
+                    <Label className="text-gray-600 sm:text-base text-xs">Email</Label>
                     <Input 
                         value={profile.user?.email || ''}
                         readOnly
-                        className="bg-gray-50"
+                        className="bg-gray-50 sm:text-base text-xs"
                     />
                 </div>  
             </div>
@@ -90,10 +90,10 @@ async function PersonalInfo() {
             {/* Department Section */}
             <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
                 <div>
-                    <h3 className="font-medium text-gray-700">Department</h3>
+                    <h3 className="font-medium text-gray-700 sm:text-base text-xs">Department</h3>
                 </div>
                 <div className='space-y-2'>
-                    <Label className="text-gray-600">Department</Label>
+                    <Label className="text-gray-600 sm:text-base text-xs">Department</Label>
                     <Input 
                         value={DEPARTMENT_MAP[profile.user?.type as keyof typeof DEPARTMENT_MAP] || ''}
                         readOnly

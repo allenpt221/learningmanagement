@@ -2,7 +2,7 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { LogOut } from '@/server-action/auth.action';
 import { Bell, ChevronDown, Menu, X } from 'lucide-react';
 import { Button } from './ui/button';
