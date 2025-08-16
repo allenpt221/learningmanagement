@@ -1,13 +1,14 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PostContent from "@/components/PostContent";
 import { formatDistanceToNow } from "date-fns";
-import { Dot, MessageCircle, MoreHorizontal, ThumbsUp } from "lucide-react";
+import { CircleCheckBig, Dot, MessageCircle, MoreHorizontal, ThumbsUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { createComment, toggleLikes, updateComment, deletePost,  } from "@/server-action/post.action";
 import { CommentsTree } from "@/components/RenderComments";
 import { PostDropdownMenu } from "@/components/PostDropdownMenu";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 interface ProfileProps {
   post: {
@@ -52,6 +53,8 @@ export function ProfileContent({
   const [editingContent, setEditingContent] = useState("");
 
   const [isShowComment, setIsShowComment] = useState(false);
+  const [alertLike, setAlertLike] = useState(false);
+
 
   const handleLike = async () => {
     if (isLiking) return;
@@ -61,6 +64,8 @@ export function ProfileContent({
       if (res.success) {
         setHasLiked((prev) => !prev);
         setLikeCount((count) => (hasLiked ? count - 1 : count + 1));
+      } else {
+        setAlertLike(true);
       }
     } catch (error) {
       console.error("Error toggling like:", error);
@@ -89,7 +94,14 @@ export function ProfileContent({
     } finally {
       setIsCommenting(false);
     }
-  };
+  }; 
+  
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setAlertLike(false)
+    }, 3000);
+    return () => clearTimeout(timer);
+  }, [alertLike])
 
   const handleUpdateComment = async (
     commentId: string,
@@ -234,6 +246,25 @@ export function ProfileContent({
               )}
           </div>
         )}
+
+        {alertLike && (
+        <Alert
+          variant="default"
+          className="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-md px-6 py-4 shadow-lg rounded-xl border border-red-300 bg-red-50"
+        >
+          <div className="flex items-start gap-3">
+            <CircleCheckBig className="text-red-600 mt-1" />
+            <div>
+              <AlertTitle className="text-red-800 text-sm font-semibold">
+                Authentication required
+              </AlertTitle>
+              <AlertDescription className="text-red-700 text-sm">
+                Please log in to like this post.
+              </AlertDescription>
+            </div>
+          </div>
+        </Alert>
+      )}
         
 
       </div>
