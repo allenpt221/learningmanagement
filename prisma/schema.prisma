@@ -58,6 +58,7 @@ model Post {
 model Community {
   id String @id @default(uuid())
   AuthorId String
+  title String?
   description String
   image String
   department DepartmentType
