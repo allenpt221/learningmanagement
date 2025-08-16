@@ -43,7 +43,7 @@ export default function FollowButton({ targetUserId, isFollowing, isLoggedIn }: 
     <>
       <button
         onClick={handleClick}
-        className={`mt-2 px-4 py-2 font-medium rounded transition sm:text-sm text-xs
+        className={`mt-2 px-4 py-2 font-medium rounded-full transition sm:text-sm text-xs
           ${following && isLoggedIn ? 'border bg-white text-black hover:bg-muted' : 'bg-black text-white hover:bg-black/60'}`}
       >
         {/* Always show "Follow" if not logged in */}
