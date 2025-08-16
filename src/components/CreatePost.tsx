@@ -141,7 +141,7 @@ function CreatePost({ image, firstname, lastname }: ProfileType) {
           <button
             onClick={handleSubmit}
             disabled={loading || (!postText.trim() && postImageFiles.length === 0)}
-            className="bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium py-2 px-4 rounded-xl transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
+            className="bg-black hover:bg-black/50 text-white text-sm font-medium py-2 px-4 rounded-xl transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
           >
             {loading ? "Posting..." : "Post"}
           </button>

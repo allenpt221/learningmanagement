@@ -131,9 +131,6 @@ export default function NavbarClient({ profile, notif = [] }: { profile: any, no
                     </div>
                   )}
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem className="text-center w-full text-blue-500 cursor-pointer">
-                    View all
-                  </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
 
