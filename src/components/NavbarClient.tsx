@@ -63,7 +63,7 @@ export default function NavbarClient({ profile, notif = [] }: { profile: any, no
 
   return (
     <header className="sticky top-0 z-50 border-b bg-white/95 backdrop-blur-sm">
-      <div className="mx-auto flex h-16 items-center justify-between lg:px-52 px-3">
+      <div className="mx-auto flex h-16 items-center justify-between sm:px-20 px-3">
         {/* Logo */}
         <div className='flex items-center gap-6'>
           <Link href="/" className="flex flex-col items-center space-x-2 hover:opacity-90 transition-opacity">
@@ -185,7 +185,7 @@ export default function NavbarClient({ profile, notif = [] }: { profile: any, no
         <AnimatePresence>
           {isOpen && (
             <motion.div
-              className="fixed inset-0 bg-black/20 z-40 sm:hidden"
+              className="fixed inset-0 z-40 sm:hidden h-full"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -201,13 +201,22 @@ export default function NavbarClient({ profile, notif = [] }: { profile: any, no
               >
                 <div className='flex justify-between items-center'>
                   <Link href="/" className="text-xl font-bold bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
-                    LMS
+                    StudySphere
                   </Link>
                   <button onClick={() => setIsOpen(false)} className="p-1 rounded-full">
                     <X size={20} className="text-muted-foreground" />
                   </button>
                 </div>
-                <div className='flex flex-col space-y-4 pt-4'>
+                <div className='flex flex-col'>
+                  <Link href='/community' className="px-4 py-2 rounded-lg hover:bg-muted/50 font-medium text-black hover:text-primary" onClick={() => setIsOpen(false)}>
+                    Community
+                  </Link>
+                  <Link href='/courses' className="px-4 py-2 rounded-lg hover:bg-muted/50 font-medium text-black hover:text-primary" onClick={() => setIsOpen(false)}>
+                    Courses
+                  </Link>
+                </div>
+                <div className='border py-0'/>
+                <div className='flex flex-col space-y-1'>
                   <Link href='/login' className="px-4 py-2 rounded-lg hover:bg-muted/50 font-medium text-muted-foreground hover:text-primary" onClick={() => setIsOpen(false)}>
                     Log In
                   </Link>
