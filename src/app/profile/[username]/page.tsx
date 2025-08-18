@@ -21,7 +21,6 @@ interface ProfilePageProps {
 
 export async function generateMetadata({ params }: ProfilePageProps): Promise<Metadata> {
   const user = await getProfileByUsername(params.username);
-
   
   if (!user) return {
     title: 'Profile not found'
