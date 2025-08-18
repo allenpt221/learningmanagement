@@ -1,10 +1,11 @@
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { createCommunity } from '@/server-action/community.action';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ImagePlus, Loader2, X } from 'lucide-react';
+import { CircleCheckBig, ImagePlus, Loader2, X } from 'lucide-react';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 function CreateCommunity() {
   const [title, setTitle] = useState('');
@@ -12,6 +13,13 @@ function CreateCommunity() {
   const [image, setImage] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+
+  const [alertTitle, setAlertTitle] = useState('');
+  const [success, setSuccess] = useState(false);
+  const [unsuccess, setUnsuccess] = useState(false);
+  const [messageAlert, setMessageAlert] = useState('');
+
+
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files ? e.target.files[0] : null;
@@ -48,14 +56,18 @@ function CreateCommunity() {
       const res = await createCommunity(formData);
 
       if (res?.success) {
-        alert('Community created successfully!');
+        setSuccess(true)
+        setAlertTitle('Community Created!'); 
+        setMessageAlert(res?.message || 'Your community was created successfully.');
         setDescription('');
         setTitle('')
         setImage(null);
         setPreview(null);
         e.currentTarget.reset();
       } else {
-        alert(res?.message || 'Failed to create community');
+        setUnsuccess(true);
+        setAlertTitle('Oops! Something went wrong');
+        setMessageAlert(res?.message || 'You can only create one community.');
       }
     } catch (error) {
       console.error('Error creating community', error);
@@ -64,10 +76,19 @@ function CreateCommunity() {
     }
   };
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setSuccess(false);
+      setUnsuccess(false);
+    }, 3000)
+
+    return () => clearTimeout(timer);
+  },[success, unsuccess])
+
   return (
       <Card className='shadow-lg w-full'>
         <CardHeader>
-          <CardTitle className='text-xl font-bold text-center'>Create New Community</CardTitle>
+          <CardTitle className='text-xl font-bold text-center'>Create Community</CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className='space-y-4'>
@@ -161,6 +182,37 @@ function CreateCommunity() {
             </Button>
           </form>
         </CardContent>
+        {success && (
+        <Alert variant="default" className="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-md px-6 py-4 shadow-lg rounded-xl border border-green-300 bg-green-50">
+          <div className="flex items-start gap-3">
+            <CircleCheckBig className="text-green-600 mt-1" />
+            <div>
+              <AlertTitle className="text-green-800 text-sm font-semibold">
+                {alertTitle}
+              </AlertTitle>
+              <AlertDescription className="text-green-700 text-sm">
+                {messageAlert}
+              </AlertDescription>
+            </div>
+          </div>
+        </Alert>
+      )}
+
+      {unsuccess && (
+        <Alert variant="default" className="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-md px-6 py-4 shadow-lg rounded-xl border border-red-300 bg-red-50">
+          <div className="flex items-start gap-3">
+            <CircleCheckBig className="text-red-600 mt-1" />
+            <div>
+              <AlertTitle className="text-red-800 text-sm font-semibold">
+                {alertTitle}
+              </AlertTitle>
+              <AlertDescription className="text-red-700 text-sm">
+                {messageAlert}
+              </AlertDescription>
+            </div>
+          </div>
+        </Alert>
+      )}
       </Card>
   );
 }
