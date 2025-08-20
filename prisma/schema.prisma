@@ -25,6 +25,8 @@ model User {
   likes    Like[]
   comment  Comment[]
   community Community[]
+  communityContent CommunityPost[]
+  communityComment CommunityComment[]
 
 
   followers Follows[] @relation("following") 
@@ -65,6 +67,35 @@ model Community {
   createdAt DateTime @default(now())
 
   author User @relation(fields: [AuthorId], references: [id], onDelete: Cascade)
+}
+
+model CommunityPost {
+  id String @id @default(uuid())
+  communityId String?
+  AuthorId String
+  contentpost String
+  department DepartmentType
+  createdAt DateTime @default(now())
+
+  // relation
+  communitypost CommunityComment[]
+
+  author User @relation(fields: [AuthorId], references: [id], onDelete: Cascade)
+
+}
+
+model CommunityComment {
+  id String @id @default(uuid())
+  AuthorId String
+  communityId String
+  contentcomment String
+  communitypostId String
+  communityparentId String? // <-- nullable parent comment ID for replies
+  createdAt DateTime @default(now())
+
+  author User @relation(fields: [AuthorId], references: [id], onDelete: Cascade)
+  communitypost CommunityPost @relation(fields: [communitypostId], references: [id], onDelete: Cascade)
+
 }
 
 model Like {
