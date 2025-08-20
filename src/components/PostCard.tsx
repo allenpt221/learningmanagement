@@ -240,9 +240,10 @@ export function PostCard({ post, isAuthor, currentUserId, auth }: PostCardProps)
               <textarea
                 maxLength={280}
                 value={newComment}
+                rows={1}
                 onChange={(e) => setNewComment(e.target.value)}
                 placeholder="Write a comment..."
-                className="flex-1 border rounded px-3 py-2 text-sm"
+                className="flex-1 border rounded px-3 py-2 text-sm resize-none"
               />
               <button
                 onClick={() => handleAddComment()}

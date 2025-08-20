@@ -7,6 +7,12 @@ import { PostCard } from "@/components/PostCard";
 import FollowButton from "@/components/FollowButton";
 import Link from "next/link";
 
+export const DEPARTMENT_MAP = {
+  CCS: 'College of Computing Studies',
+  CBS: 'College of Business Studies',
+  CEA: 'College of Engineering and Arts'
+} as const;
+
 export default async function Home() {
   const profile = await getProfile();
   const posts = profile?.user
@@ -111,7 +117,7 @@ export default async function Home() {
                       </div>
                       <div>
                         <h3 className="font-medium text-gray-900 dark:text-white">{user.username}</h3>
-                        <p className="text-sm text-gray-500 dark:text-gray-400">{user.email}</p>
+                        <p className="text-sm text-gray-500 dark:text-gray-400">{DEPARTMENT_MAP[user.type as keyof typeof DEPARTMENT_MAP]}</p>
                       </div>
                   </div>
                 </Link>
