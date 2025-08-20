@@ -26,7 +26,7 @@ export default function Loading() {
     <div className="fixed inset-0 flex flex-col justify-center items-center bg-white z-50">
       <Image src={lms} width={200} 
         height={100} alt='Error Image' className="mb-4 text-lg font-semibold" />
-      <Progress value={progress} className="w-[20%]" />
+      <Progress value={progress} className="sm:w-[30%] w-[50%]" />
     </div>
   );
 }

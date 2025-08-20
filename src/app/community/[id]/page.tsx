@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import React from 'react';
 import { getCommunityById } from '@/server-action/community.action';
+import Link from 'next/link';
 
 interface CommunityProps {
   params: { id: string };
@@ -34,12 +35,12 @@ async function Page({ params }: CommunityProps) {
         <p className="text-gray-500 max-w-md">
           The community you're looking for doesn't exist or may have been removed.
         </p>
-        <button 
+        <Link
           className="mt-2 px-4 py-2 bg-black text-white rounded-md hover:bg-black/50 transition-colors"
-          
+          href={'/community'}
         >
           Go back
-        </button>
+        </Link>
       </div>
     );
   }

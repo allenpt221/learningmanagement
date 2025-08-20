@@ -11,63 +11,49 @@ interface ProfileType {
 
 function CreatePost({ image, firstname, lastname }: ProfileType) {
   const [postText, setPostText] = useState("");
-  const [postImageFiles, setPostImageFiles] = useState<File[]>([]);
-  const [postImagePreviews, setPostImagePreviews] = useState<string[]>([]);
+  const [postImageFile, setPostImageFile] = useState<File | null>(null);
+const [postImagePreview, setPostImagePreview] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  // Handle multiple image upload and generate previews
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (!files) return;
+const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const file = e.target.files?.[0]; // only take first file
+  if (!file) return;
 
-    // Convert FileList to Array
-    const filesArray = Array.from(files);
+  // Revoke previous preview if exists
+  if (postImagePreview) {
+    URL.revokeObjectURL(postImagePreview);
+  }
 
-    // Append new files to existing ones
-    const updatedFiles = [...postImageFiles, ...filesArray];
-
-    // Limit number of images (optional)
-    if (updatedFiles.length > 5) {
-      alert("You can only upload up to 5 images.");
-      return;
-    }
-
-    setPostImageFiles(updatedFiles);
-
-    // Generate previews for new files
-    const newPreviews = filesArray.map((file) => URL.createObjectURL(file));
-    setPostImagePreviews((prev) => [...prev, ...newPreviews]);
-  };
+  setPostImageFile(file);
+  setPostImagePreview(URL.createObjectURL(file));
+};
 
   // Remove one image by index
-  const handleRemoveImage = (index: number) => {
-    setPostImageFiles((files) => files.filter((_, i) => i !== index));
-    setPostImagePreviews((previews) => {
-      URL.revokeObjectURL(previews[index]);
-      return previews.filter((_, i) => i !== index);
-    });
+  const handleRemoveImage = () => {
+    if (postImagePreview) {
+      URL.revokeObjectURL(postImagePreview);
+    }
+    setPostImageFile(null);
+    setPostImagePreview(null);
   };
 
   const handleSubmit = async () => {
-    if (!postText.trim() && postImageFiles.length === 0) return;
+    if (!postText.trim() && !postImageFile) return;
 
     try {
       setLoading(true);
       const formData = new FormData();
       formData.append("text", postText.trim());
 
-      postImageFiles.forEach((file) => {
-        formData.append("image", file); // Append multiple images with same key "image"
-      });
+      if (postImageFile) {
+        formData.append("image", postImageFile); // only one file
+      }
 
       const result = await createPost(formData);
 
       if (result.success) {
         setPostText("");
-        setPostImageFiles([]);
-        // Revoke all object URLs to avoid memory leaks
-        postImagePreviews.forEach((url) => URL.revokeObjectURL(url));
-        setPostImagePreviews([]);
+        handleRemoveImage();
         console.log("Post created:", result.post);
       } else {
         console.error(result.message || "Failed to create post");
@@ -79,9 +65,10 @@ function CreatePost({ image, firstname, lastname }: ProfileType) {
     }
   };
 
+
   return (
-    <div className="flex justify-center py-4">
-      <div className="w-full max-w-6xl border rounded-2xl p-4 shadow-sm bg-white">
+    <div className="flex justify-center py-4 w-full">
+      <div className="w-full  border rounded-2xl p-4 shadow-sm bg-white">
         {/* Profile row */}
         <div className="flex items-center gap-3 mb-3">
           <img
@@ -104,26 +91,22 @@ function CreatePost({ image, firstname, lastname }: ProfileType) {
         />
 
         {/* Images preview grid */}
-        {postImagePreviews.length > 0 && (
-          <div className="mt-3 grid grid-cols-3 gap-2">
-            {postImagePreviews.map((preview, index) => (
-              <div key={index} className="relative rounded-lg overflow-hidden">
-                <img
-                  src={preview}
-                  alt={`Post preview ${index + 1}`}
-                  className="object-cover w-full h-60 rounded-lg border"
-                />
-                <button
-                  type="button"
-                  onClick={() => handleRemoveImage(index)}
-                  className="absolute top-1 right-1 bg-black/60 text-white rounded-full p-1 hover:bg-black/80"
-                >
-                  <X size={16} />
-                </button>
-              </div>
-            ))}
-          </div>
-        )}
+          {postImagePreview && (
+            <div className="mt-3 relative rounded-lg overflow-hidden">
+              <img
+                src={postImagePreview}
+                alt="Post preview"
+                className="object-cover w-full h-[25rem] rounded-lg border"
+              />
+              <button
+                type="button"
+                onClick={handleRemoveImage}
+                className="absolute top-1 right-1 bg-black/60 text-white rounded-full p-1 hover:bg-black/80"
+              >
+                <X size={16} />
+              </button>
+            </div>
+          )}
 
         {/* Action row */}
         <div className="flex justify-between items-center mt-3">
@@ -140,7 +123,7 @@ function CreatePost({ image, firstname, lastname }: ProfileType) {
           </label>
           <button
             onClick={handleSubmit}
-            disabled={loading || (!postText.trim() && postImageFiles.length === 0)}
+            disabled={loading || (!postText.trim() && !postImageFile)}
             className="bg-black hover:bg-black/50 text-white text-sm font-medium py-2 px-4 rounded-xl transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
           >
             {loading ? "Posting..." : "Post"}

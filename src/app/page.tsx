@@ -27,7 +27,7 @@ export default async function Home() {
       {/* Main Content */}
       <main className="flex-1">
         {profile?.user && (
-          <div className="mb-8 bg-white rounded-lg  p-4">
+          <div className="mb-8 bg-white rounded-lg w-full">
             <CreatePost
               image={profile.user.image}
               firstname={profile.user.firstname}
