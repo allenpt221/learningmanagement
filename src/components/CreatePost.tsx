@@ -12,7 +12,7 @@ interface ProfileType {
 function CreatePost({ image, firstname, lastname }: ProfileType) {
   const [postText, setPostText] = useState("");
   const [postImageFile, setPostImageFile] = useState<File | null>(null);
-const [postImagePreview, setPostImagePreview] = useState<string | null>(null);
+  const [postImagePreview, setPostImagePreview] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
 const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {

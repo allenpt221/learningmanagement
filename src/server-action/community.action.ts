@@ -95,6 +95,9 @@ export async function getCommunityById(id: string) {
 
     const communityContent = await prisma.community.findUnique({
       where: { id },
+      include: {
+        author: true
+      }
     })
 
     return communityContent;
@@ -104,3 +107,51 @@ export async function getCommunityById(id: string) {
   }
 
 }
+
+export async function createCommunityPost(formData: FormData, communityId: string) {
+  try {
+    const profile = await getProfile();
+
+    const contentpost = formData.get("content") as string;
+
+    if (!profile.user || !profile.success) {
+      return { success: false, message: "Unauthorized, Please Log in to post in community" };
+    }
+
+
+    const communitypost = await prisma.communityPost.create({
+      data: {
+        AuthorId: profile.user.id,
+        contentpost,
+        department: profile.user.type,
+        communityId, 
+      },
+    });
+
+    revalidatePath(`community/${communityId}`)
+
+    return { success: true, communitypost, message: "successfully post in community." };
+  } catch (error: any) {
+    console.error("Error posting in community:", error);
+    return { success: false, message: "Internal Server Error" };
+  }
+}
+
+export async function getCommunityPost(communityId: string) {
+  try {
+
+    const getPostCommunity = await prisma.communityPost.findMany({
+      where: { communityId },
+      include: { author: true},
+      orderBy: {
+        createdAt: "desc"
+      }
+    })
+
+    return getPostCommunity
+  
+  } catch (error: any) {
+    console.error("Error fetching the post in community:", error);
+  }
+}
+
