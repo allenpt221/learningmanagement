@@ -19,14 +19,14 @@ export async function POST(request: Request) {
     }
 
     // 4️⃣ Verify token
-    const tokenPayload  = verifyToken(token);
+    const tokenPayload = verifyToken(token);
     if (!tokenPayload || !tokenPayload.userId) {
       return NextResponse.json({ success: false, message: 'Invalid token' }, { status: 401 });
     }
 
     const userId = tokenPayload.userId;
 
-    // 5️⃣ Get logged-in user and their department
+    // 5️⃣ Get logged-in user
     const user = await prisma.user.findUnique({
       where: { id: userId },
       select: { type: true },
@@ -38,19 +38,27 @@ export async function POST(request: Request) {
 
     // 6️⃣ Get POST data
     const body = await request.json();
-    const { description } = body;
+    const { communityId, description } = body; // 👈 include communityId
 
-    if (!description) {
-      return NextResponse.json({ success: false, message: 'Description required' }, { status: 400 });
+    if (!description || !communityId) {
+      return NextResponse.json({ success: false, message: 'Description and communityId required' }, { status: 400 });
     }
 
-    // 7️⃣ Create post in DB with user's department
-    const post = await prisma.community.create({
+    // 7️⃣ Verify community exists
+    const community = await prisma.community.findUnique({
+      where: { id: communityId },
+    });
+    if (!community) {
+      return NextResponse.json({ success: false, message: 'Community not found' }, { status: 404 });
+    }
+
+    // 8️⃣ Create post in that community
+    const post = await prisma.communityPost.create({
       data: {
-        description,
-        department: user.type, // use user's department
+        contentpost: description,
+        department: user.type,
         AuthorId: userId,
-        image: "",
+        communityId: communityId, // link to community
       },
     });
 
