@@ -80,7 +80,7 @@ const NotificationPage = () => {
     );
   }
 
-  const post = notification.post;
+  const { type, creator, post, comment } = notification;
 
   return (
     <div className="p-4 max-w-3xl mx-auto">
@@ -93,25 +93,35 @@ const NotificationPage = () => {
         {/* User Info */}
         <div className="flex items-center space-x-2">
           <img
-            src={post?.author?.image || '/default-avatar.png'}
-            alt={`${post?.author?.firstname || 'User'} ${post?.author?.lastname || ''}`}
+            src={
+              type === 'FOLLOW'
+                ? creator?.image || '/default-avatar.png'
+                : post?.author?.image || '/default-avatar.png'
+            }
+            alt={
+              type === 'FOLLOW'
+                ? creator?.firstname || 'User'
+                : `${post?.author?.firstname || 'User'} ${post?.author?.lastname || ''}`
+            }
             className="w-10 h-10 rounded-full"
           />
           <p className="font-medium">
-            {post?.author?.firstname || 'Unknown'} {post?.author?.lastname || ''}
+            {type === 'FOLLOW' && (
+              `${creator?.firstname} ${creator?.lastname}`
+            )}
           </p>
         </div>
 
         {/* Notification Action */}
         <p className="text-sm font-medium">
-          <span>{notification.creator?.username || 'Someone'}</span>{' '}
-          {notification.type === 'LIKE' && 'liked your post'}
-          {notification.type === 'COMMENT' && 'commented on your post'}
-          {notification.type === 'FOLLOW' && 'started following you'}
+          <span>{creator?.username || 'Someone'}</span>{' '}
+          {type === 'LIKE' && 'liked your post'}
+          {type === 'COMMENT' && 'commented on your post'}
+          {type === 'FOLLOW' && 'started following you'}
         </p>
 
         {/* Post Content */}
-        {post && (
+        {post && type !== 'FOLLOW' && (
           <div className="mt-2 border-t pt-2 text-sm text-gray-700 space-y-2">
             <PostContent content={post.content || ''} />
             {post.image && (
@@ -125,10 +135,10 @@ const NotificationPage = () => {
         )}
 
         {/* Comment Content */}
-        {notification.comment && (
+        {comment && (
           <div className="mt-2 border-t pt-2 text-sm text-gray-700">
             <p className="font-medium">Comment that triggered notification:</p>
-            <p>{notification.comment.content}</p>
+            <p>{comment.content}</p>
           </div>
         )}
       </div>
