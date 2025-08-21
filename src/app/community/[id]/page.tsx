@@ -3,8 +3,11 @@ import React from 'react';
 import { getCommunityById, getCommunityPost } from '@/server-action/community.action';
 import Link from 'next/link';
 import { formatDistanceToNow } from "date-fns";
-import { Clock, MessageCircle, MessageSquareMore, UserRound } from 'lucide-react';
-import CommunityPost from '@/components/CommunityPost';
+import { Clock, MessageSquareMore, UserRound, UserRoundX } from 'lucide-react';
+import CommunityPost from '@/components/Community/CommunityPost';
+import { PostDropdownMenu } from '@/components/PostDropdownMenu';
+import CommunityComment from '@/components/Community/CommunityComment';
+import { getProfile } from '@/server-action/auth.action';
 
 interface CommunityProps {
   params: { id: string };
@@ -25,6 +28,9 @@ async function Page({ params }: CommunityProps) {
 
   const postCommunity = await getCommunityPost(params.id);
 
+  const profile = await getProfile();
+
+
   console.log('postcommunity:',postCommunity)
 
   if (!postCommunity) {
@@ -35,19 +41,14 @@ async function Page({ params }: CommunityProps) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[70vh] gap-4 p-6 text-center bg-gray-50 rounded-lg">
         <div className="text-6xl text-gray-400 mb-4">
-          <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
-            <circle cx="9" cy="7" r="4"></circle>
-            <line x1="17" y1="8" x2="22" y2="13"></line>
-            <line x1="22" y1="8" x2="17" y2="13"></line>
-          </svg>
+          <UserRoundX size={50} />
         </div>
         <h3 className="text-2xl font-semibold text-gray-800">Community not found</h3>
         <p className="text-gray-600 max-w-md mb-6">
           The community you're looking for doesn't exist or may have been removed.
         </p>
         <Link
-          className="px-5 py-2.5 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors font-medium"
+          className="px-5 py-2.5 bg-black text-white rounded-md hover:bg-black/50 transition-colors font-medium"
           href={'/community'}
         >
           Browse Communities
@@ -59,15 +60,15 @@ async function Page({ params }: CommunityProps) {
   return (
     <div className='max-w-7xl mx-auto px-4 py-8 gap-8 w-full'>
       <div className='flex flex-col-reverse lg:flex-row gap-8'>
-        <main className='flex-1 bg-white rounded-xl shadow-sm p-6 border border-gray-200'>
+        <main className='flex-1 bg-white rounded-xl shadow-sm sm:p-6 p-3 border border-gray-200'>
           <CommunityPost />
           
-          <div className='bg-gray-50 p-6 rounded-lg mb-6'>
+          <div className='bg-gray-50 sm:p-6 p-3 rounded-lg mb-6'>
             <h2 className='text-xl font-semibold text-gray-800 mb-4'>Community Content</h2>
             {/* post content */}
             {postCommunity.length > 0 ? (
               postCommunity.map((post) => (
-                <div key={post.id} className='bg-white rounded-xl shadow-sm p-5 mb-5 border border-gray-100 transition-all duration-300 hover:shadow-md'>
+                <div key={post.id} className='bg-white rounded-xl shadow-sm sm:p-5 p-3 mb-5 border border-gray-100 transition-all duration-300 hover:shadow-md'>
                   <div className='flex items-start justify-between'>
                     <div className='flex items-center space-x-3'>
                       <img 
@@ -82,20 +83,20 @@ async function Page({ params }: CommunityProps) {
                         </p>
                       </div>
                     </div>
-                    <button className='text-gray-400 hover:text-gray-600 transition-colors'>
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z" />
-                      </svg>
-                    </button>
+                    {profile.user && (
+                      <button className='text-gray-400 hover:text-gray-600 transition-colors'>
+                        <PostDropdownMenu postId={post.id}/>
+                      </button>
+
+                    )}
                   </div>
                   
-                  <p className='mt-4 text-gray-800 whitespace-pre-line'>{post.contentpost}</p>
-                  
-                  <div className='mt-4 pt-4 border-t border-gray-100 flex items-center text-gray-500'>                    
-                    <button className='flex items-center mr-4 hover:text-blue-600 transition-colors space-x-1'>
-                      <MessageCircle size={15} />
-                      <span className='text-sm'>8 comments</span>
-                    </button>                    
+                  <p className='mt-4 text-gray-800 whitespace-pre-line text-sm'>{post.contentpost}</p>      
+                  <div className='mt-4 pt-4 border-t border-gray-100 flex items-center text-gray-500'>
+
+                      <CommunityComment countComment={post._count.communitycomment} post={post} auth={profile.user?.id}/>            
+                  </div>
+                  <div>
                   </div>
                 </div>
               ))
