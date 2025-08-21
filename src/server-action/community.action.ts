@@ -142,10 +142,23 @@ export async function getCommunityPost(communityId: string) {
 
     const getPostCommunity = await prisma.communityPost.findMany({
       where: { communityId },
-      include: { author: true},
+      include: { 
+        author: true,
+        communitycomment: {
+          include: {
+            author: true
+          }
+        },
+        _count: {
+          select: {
+            communitycomment: true
+          }
+        }
+
+      },
       orderBy: {
         createdAt: "desc"
-      }
+      },
     })
 
     return getPostCommunity
@@ -154,4 +167,37 @@ export async function getCommunityPost(communityId: string) {
     console.error("Error fetching the post in community:", error);
   }
 }
+
+export async function createCommentCommunity(
+  communityId: string,
+  communitypostId: string,
+  content: string,
+  communityparentId?: string | null,
+) {
+  try {
+    const profile = await getProfile();
+
+    if (!profile.user) {
+      return { success: false, message: "Unauthorized, please log in to comment." };
+    }
+
+    const newComment = await prisma.communityComment.create({
+      data: {
+        AuthorId: profile.user.id,
+        contentcomment: content,
+        communitypostId,
+        communityparentId: communityparentId ?? null,
+        communityId
+      },
+    });
+
+    revalidatePath(`/community/${communityId}`)
+
+    return { success: true, comment: newComment };
+  } catch (error: any) {
+    console.error("Error in create comment community:", error);
+    return { success: false, message: "Something went wrong while creating comment." };
+  }
+}
+
 
