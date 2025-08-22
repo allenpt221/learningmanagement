@@ -354,7 +354,7 @@ export async function getNotificationById(id: string) {
     const notification = await prisma.notification.findUnique({
       where: { id },
       include: {
-        creator: {
+        creator: {   // user who triggered the notification
           select: {
             id: true,
             username: true,
@@ -363,13 +363,19 @@ export async function getNotificationById(id: string) {
             image: true,
           },
         },
-        post: {
+        post: {      // only if it's LIKE / COMMENT
           select: {
             id: true,
             content: true,
             image: true,
-            author: { // user who owns the post
-              select: { id: true, username: true, firstname: true, lastname: true, image: true }
+            author: { 
+              select: { 
+                id: true, 
+                username: true, 
+                firstname: true, 
+                lastname: true, 
+                image: true 
+              }
             },
             comment: {
               select: {
@@ -380,7 +386,7 @@ export async function getNotificationById(id: string) {
             },
           },
         },
-        comment: {
+        comment: {   // only if notification itself is about a comment
           select: {
             id: true,
             content: true,
@@ -398,5 +404,6 @@ export async function getNotificationById(id: string) {
     return null;
   }
 }
+
 
 

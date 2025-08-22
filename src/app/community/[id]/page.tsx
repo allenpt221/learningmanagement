@@ -3,11 +3,11 @@ import React from 'react';
 import { getCommunityById, getCommunityPost } from '@/server-action/community.action';
 import Link from 'next/link';
 import { formatDistanceToNow } from "date-fns";
-import { Clock, MessageSquareMore, UserRound, UserRoundX } from 'lucide-react';
+import { Clock,  MessageSquareMore, UserRound, UserRoundX } from 'lucide-react';
 import CommunityPost from '@/components/Community/CommunityPost';
-import { PostDropdownMenu } from '@/components/PostDropdownMenu';
 import CommunityComment from '@/components/Community/CommunityComment';
 import { getProfile } from '@/server-action/auth.action';
+import PostDelete from '@/components/Community/PostDelete';
 
 interface CommunityProps {
   params: { id: string };
@@ -73,7 +73,7 @@ async function Page({ params }: CommunityProps) {
                     <div className='flex items-center space-x-3'>
                       <img 
                         src={post.author.image} 
-                        className='h-12 w-12 rounded-full object-cover border-2 border-white shadow-sm' 
+                        className='sm:h-12 sm:w-12 w-10 h-10 rounded-full object-cover border-2 border-white shadow-sm' 
                         alt={`${post.author.firstname} ${post.author.lastname}`} 
                       />
                       <div>
@@ -85,7 +85,9 @@ async function Page({ params }: CommunityProps) {
                     </div>
                     {profile.user && (
                       <button className='text-gray-400 hover:text-gray-600 transition-colors'>
-                        <PostDropdownMenu postId={post.id}/>
+                        {profile.user.id === post.author.id && (
+                            <PostDelete postId={post.id} />
+                        )}
                       </button>
 
                     )}
@@ -143,7 +145,7 @@ async function Page({ params }: CommunityProps) {
                   <Clock className='text-blue-500'/>
                 </div>
                 <div>
-                  <p className='text-xs text-gray-500'>Joined</p>
+                  <p className='text-xs text-gray-500'>Joined in community</p>
                   <p className='text-sm font-medium text-gray-900'>{formatDistanceToNow(new Date(community.createdAt), { addSuffix: true })}</p>
                 </div>
               </div>

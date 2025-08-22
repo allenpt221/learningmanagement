@@ -105,7 +105,7 @@ function CommunityComment({
               <button
                 onClick={handleComment}
                 disabled={isCommenting || !commentText.trim()}
-                className="px-4 py-2 w-[5rem] h-[2.6rem] bg-black text-white rounded text-sm hover:bg-black/80 disabled:bg-black/40"
+                className="px-4 py-2 sm:w-[5rem] sm:h-[2.6rem] bg-black text-white rounded text-sm hover:bg-black/80 disabled:bg-black/40"
               >
                 {isCommenting ? "Posting..." : "Post"}
               </button>

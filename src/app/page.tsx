@@ -41,9 +41,9 @@ export default async function Home() {
             />
           </div>
         )}
-
+          {/* the sidebar in mobile screen */}
               {profile?.user && randomUsers.length > 0 && (
-                <aside className="xl:hidden lg:block w-full h-fit max-h-[10rem] overflow-hidden overflow-y-auto space-y-4 py-3 px-4 bg-white dark:bg-gray-900 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+                <aside className="xl:hidden lg:block w-full mb-5 h-fit max-h-[12rem] overflow-hidden overflow-y-auto space-y-4 py-3 px-4 bg-white dark:bg-gray-900 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
                   <div className="flex items-center justify-between mb-2">
                     <h2 className="text-xl font-bold text-gray-800 dark:text-white">Suggested follow</h2>
                   </div>

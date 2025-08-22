@@ -63,7 +63,7 @@ export default function NavbarClient({ profile, notif = [] }: { profile: any, no
 
   return (
     <header className="sticky top-0 z-50 border-b bg-white/95 backdrop-blur-sm">
-      <div className="mx-auto flex h-16 items-center justify-between sm:px-20 px-3">
+      <div className="mx-auto flex h-16 items-center justify-between md:px-20 px-3">
         {/* Logo */}
         <div className='flex items-center gap-6'>
           <Link href="/" className="flex flex-col items-center space-x-2 hover:opacity-90 transition-opacity">
@@ -97,7 +97,7 @@ export default function NavbarClient({ profile, notif = [] }: { profile: any, no
                     )}
                   </button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-80 max-h-96 overflow-y-auto p-0">
+                <DropdownMenuContent className="sm:w-80 max-h-96 overflow-y-auto p-0 mx-2">
                   <DropdownMenuLabel className="px-3 py-2 font-semibold">Notifications</DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   {notifications.length > 0 ? (
@@ -151,6 +151,12 @@ export default function NavbarClient({ profile, notif = [] }: { profile: any, no
                 <DropdownMenuContent align="end" className="w-56 rounded-lg shadow-lg border-muted-foreground/20">
                   <DropdownMenuItem asChild className="cursor-pointer hover:bg-muted/50">
                     <Link href={profileUrl} className="w-full px-2 py-1.5">Profile</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild className="cursor-pointer hover:bg-muted/50 sm:hidden block">
+                    <Link href={'/community'} className="w-full px-2 py-1.5">Community</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild className="cursor-pointer hover:bg-muted/50 sm:hidden block">
+                    <Link href={'/courses'} className="w-full px-2 py-1.5">Courses</Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild className="cursor-pointer hover:bg-muted/50">
                     <Link href="/settings" className="w-full px-2 py-1.5">Settings</Link>

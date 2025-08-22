@@ -200,4 +200,20 @@ export async function createCommentCommunity(
   }
 }
 
+export async function deleteCommunityPost(postId: string, communityId: string){
+  try {
+    await prisma.communityPost.delete({
+      where: {
+        id: postId
+      }
+    })
+    
+    revalidatePath(`/community${communityId}`)
+
+    return { success: true, message: "delete post successfully" }
+  } catch (error: any) {
+    console.error("Error deleting post community");
+  }
+}
+
 

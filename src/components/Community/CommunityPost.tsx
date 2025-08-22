@@ -27,7 +27,7 @@ function CommunityPost() {
     if (!content.trim()) { 
       setUnsuccess(true);
       setAlertTitle('Oops! Something went wrong');
-      setMessageAlert("Post content cannot be empty"); 
+      setMessageAlert("Post community content cannot be empty"); 
       return;
     }
 
@@ -43,7 +43,7 @@ function CommunityPost() {
       } else {
         setUnsuccess(true);
         setAlertTitle('Oops! Something went wrong')
-        setMessageAlert(res.message)
+        setMessageAlert(res?.message)
       }
     } catch (error) {
       console.error(error);
