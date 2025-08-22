@@ -1,8 +1,7 @@
 'use client'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 import { Button } from '@/components/ui/button';
-import { CircleCheckBig, Ellipsis, SquarePen, Trash } from 'lucide-react';
-import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
+import {  Ellipsis, SquarePen, Trash } from 'lucide-react';
 
 import { deleteCommunityPost } from "@/server-action/community.action";
 import { useParams } from "next/navigation";
@@ -41,7 +40,7 @@ function PostDelete({postId}: {postId: string}) {
                 <Trash size={15}/>
             </DropdownMenuItem>
             </DropdownMenuContent>
-            </DropdownMenu>
+        </DropdownMenu>
 
     </div>
   )

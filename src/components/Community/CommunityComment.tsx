@@ -1,22 +1,28 @@
 "use client";
 
-import { MessageCircle } from "lucide-react";
+import { Ellipsis, MessageCircle, Trash } from "lucide-react";
 import React, { useState } from "react";
-import { createCommentCommunity } from "@/server-action/community.action";
+import { createCommentCommunity, deleteCommunityComment } from "@/server-action/community.action";
 import { useParams } from "next/navigation";
 import { formatDistanceToNow } from "date-fns";
+
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
+
 
 
 function CommunityComment({
   countComment,
   post,
-  auth
+  auth,
+  profile
 }: {
   countComment: number;
   post: any; // ideally type this from Prisma
-  auth?: string
+  auth?: string,
+  profile: any
 }) {
-  const { id } = useParams(); // communityId
+  const params = useParams(); // communityId
+  const communityId = params.id as string;
   const [commentText, setCommentText] = useState("");
   const [showComments, setShowComments] = useState(false);
   const [isCommenting, setIsCommenting] = useState(false);
@@ -27,7 +33,7 @@ function CommunityComment({
     setIsCommenting(true);
 
     const res = await createCommentCommunity(
-      id as string,
+      communityId,
       post.id,       // communityPostId
       commentText
     );
@@ -42,6 +48,7 @@ function CommunityComment({
 
     setIsCommenting(false);
   };
+
 
   return (
     <div className="w-full">
@@ -65,7 +72,7 @@ function CommunityComment({
           <div className="mt-2 text-sm text-gray-600 space-y-3">
             {post.communitycomment && post.communitycomment.length > 0 ? (
               post.communitycomment.map((comment: any) => (
-                <div className="flex justify-between w-full">
+                <div className="flex justify-between  w-full">
                   <div key={comment.id} className="flex items-start gap-2">
                     <img
                       src={comment.author.image}
@@ -80,6 +87,26 @@ function CommunityComment({
                         {comment.contentcomment}
                       </p>
                     </div>
+                    {profile?.user?.id === comment.author.id && (
+                      <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                              <Ellipsis size={13} />
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent
+                          align="end"
+                          className="w-32 rounded-md shadow-lg bg-white border border-gray-200 z-50"
+                          >
+                          <DropdownMenuItem
+                              className="flex gap-2 items-center justify-center px-4 py-2 text-sm cursor-pointer hover:bg-gray-100 text-red-600"
+                              onClick={() => deleteCommunityComment(comment.id, communityId)}
+                          >
+                              Delete
+                              <Trash size={13}/>
+                          </DropdownMenuItem>
+                          </DropdownMenuContent>
+                      </DropdownMenu>
+
+                    )}
                   </div>
                     <div>
                       {formatDistanceToNow(new Date(comment.createdAt), { addSuffix: true})}
