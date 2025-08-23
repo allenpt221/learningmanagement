@@ -54,12 +54,10 @@ const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
       if (result.success) {
         setPostText("");
         handleRemoveImage();
-        console.log("Post created:", result.post);
       } else {
         console.error(result.message || "Failed to create post");
       }
     } catch (error) {
-      console.error("Error creating post:", error);
     } finally {
       setLoading(false);
     }

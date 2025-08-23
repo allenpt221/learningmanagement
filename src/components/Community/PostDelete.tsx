@@ -5,11 +5,15 @@ import {  Ellipsis, SquarePen, Trash } from 'lucide-react';
 
 import { deleteCommunityPost } from "@/server-action/community.action";
 import { useParams } from "next/navigation";
+import { useState } from "react";
+import UpdateCommunityPost from "../Modal/UpdateCommunityPost";
 
 
 function PostDelete({postId}: {postId: string}) {
     const params = useParams();
     const communityId = params.id as string;
+    const [openModal, setOpenModal] = useState(false);
+
 
     
   return (
@@ -28,7 +32,9 @@ function PostDelete({postId}: {postId: string}) {
             align="end"
             className="w-32 rounded-md shadow-lg bg-white border border-gray-200 z-50"
             >
-            <DropdownMenuItem className="flex gap-2 items-center justify-center px-4 py-2 text-sm cursor-pointer hover:bg-gray-100">
+            <DropdownMenuItem
+            onClick={() => setOpenModal(true)}
+            className="flex gap-2 items-center justify-center px-4 py-2 text-sm cursor-pointer hover:bg-gray-100">
                 Edit
                 <SquarePen size={15} />
             </DropdownMenuItem>
@@ -41,6 +47,13 @@ function PostDelete({postId}: {postId: string}) {
             </DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>
+
+       {openModal && (
+            <UpdateCommunityPost 
+                isClose={() => setOpenModal(false)}
+                postId={postId}
+                />
+        )}
 
     </div>
   )

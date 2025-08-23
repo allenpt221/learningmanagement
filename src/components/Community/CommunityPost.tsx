@@ -76,7 +76,7 @@ function CommunityPost() {
           onKeyDown={(e) => {
           if (e.key === "Enter") {
             e.preventDefault();
-            handleSubmit(e as any); // submit when Ctrl+Enter
+            handleSubmit(e as any); // submit when Enter
           }
         }}
         />

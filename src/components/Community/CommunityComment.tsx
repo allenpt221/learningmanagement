@@ -72,8 +72,8 @@ function CommunityComment({
           <div className="mt-2 text-sm text-gray-600 space-y-3">
             {post.communitycomment && post.communitycomment.length > 0 ? (
               post.communitycomment.map((comment: any) => (
-                <div className="flex justify-between  w-full">
-                  <div key={comment.id} className="flex items-start gap-2">
+                <div className="flex justify-between w-full">
+                  <div key={comment.id} className="flex items-center gap-2">
                     <img
                       src={comment.author.image}
                       alt=""

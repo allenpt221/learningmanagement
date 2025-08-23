@@ -263,7 +263,7 @@ export async function getRandomUsers() {
 
     return randomUsers;
   } catch (error) {
-    console.log("Error fetching random users", error);
+    console.error("Error fetching random users", error);
     return [];
   }
 }

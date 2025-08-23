@@ -232,4 +232,57 @@ export async function deleteCommunityComment(commentId: string, communityId: str
   }
 }
 
+export async function updatePostCommunity(formData: FormData, postId: string){
+  try {
+    
+    const content = formData.get("content") as string;
+
+
+    const updatePost = await prisma.communityPost.update({
+      where: {
+        id: postId
+      },
+      data: {
+        contentpost: content,
+      },
+    })
+
+
+    revalidatePath('/')
+    return updatePost;
+
+  } catch (error: any) {
+    console.error("Error Updating the Community Post", error);
+
+  }
+}
+
+export async function getCommunityPostById(postId: string) {
+  try {
+    const communityPostId = await prisma.communityPost.findUnique({
+      where: { id: postId },
+      select: { 
+        author: true,
+        createdAt: true,
+        contentpost: true,
+        communitycomment: {
+          include: {
+            author: true,
+          }
+        },
+        _count: {
+          select: {
+            communitycomment: true
+          }
+        }
+      }
+    });
+
+    return communityPostId;
+  } catch (error: any) {
+    console.error("Error fetching the community post:", error);
+    throw error;
+  }
+}
+
 

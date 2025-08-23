@@ -31,7 +31,6 @@ async function Page({ params }: CommunityProps) {
   const profile = await getProfile();
 
 
-  console.log('postcommunity:',postCommunity)
 
   if (!postCommunity) {
     return <p>Loading...</p>;
