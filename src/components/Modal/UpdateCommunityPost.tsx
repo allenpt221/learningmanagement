@@ -76,7 +76,7 @@ function UpdateCommunityPost({ isClose, postId }: ModalProps) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
-      <div className="bg-white p-6 rounded-lg w-[30rem] max-w-[90vw] max-h-[90vh] overflow-y-auto">
+      <div className="bg-white px-6 py-3 rounded-lg w-[30rem] max-w-[90vw] max-h-[90vh] overflow-y-auto">
         {/* Close button */}
         <div className="flex justify-end mb-4">
           <button 

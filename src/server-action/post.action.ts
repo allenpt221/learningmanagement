@@ -406,4 +406,50 @@ export async function getNotificationById(id: string) {
 }
 
 
+export async function updatePost(formData: FormData, PostId: string) {
+  try {
+    const image = formData.get("image") as string;
+    const content = formData.get("content") as string;
+
+    const updatedPost = await prisma.post.update({
+      where: {
+        id: PostId
+      },
+      data: {
+        image,
+        content
+      }
+    })
+
+    revalidatePath('/')
+
+    return  updatedPost;
+
+  } catch (error) {
+    console.log("Error Updating the post", error);
+  }
+}
+
+
+export async function getPostById(postId: string){
+  try {
+    const getPost = await prisma.post.findUnique({
+      where: {
+        id: postId
+      },
+      select: {
+        content: true,
+        image: true,
+        author: true,
+        createdAt: true,
+      }
+    })
+
+    return getPost
+
+  } catch (error) {
+    console.error("error getting the post by the Id", error);
+  }
+}
+
 

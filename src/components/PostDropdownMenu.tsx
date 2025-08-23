@@ -6,6 +6,7 @@ import { CircleCheckBig, Ellipsis } from "lucide-react";
 import { Button } from "./ui/button";
 import { ConfirmationDeletion } from "./Modal/ConfirmationDeletion";
 import { Alert, AlertDescription, AlertTitle } from "./ui/alert";
+import UpdatePost from "./Modal/UpdatePost";
 
 interface PostDropdownMenuProps {
   postId: string;
@@ -13,6 +14,7 @@ interface PostDropdownMenuProps {
 
 export function PostDropdownMenu({ postId }: PostDropdownMenuProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [UpdateModal, setUpdateModal] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false);
   const [deleteAlert, setDeleteAlert] = useState(false);
 
@@ -55,7 +57,9 @@ export function PostDropdownMenu({ postId }: PostDropdownMenuProps) {
           align="end"
           className="w-48 rounded-md shadow-lg bg-white border border-gray-200 z-50"
         >
-          <DropdownMenuItem className="px-4 py-2 text-sm cursor-pointer hover:bg-gray-100">
+          <DropdownMenuItem 
+          onClick={() => setUpdateModal(true)}
+          className="px-4 py-2 text-sm cursor-pointer hover:bg-gray-100">
             Edit Post
           </DropdownMenuItem>
           <DropdownMenuItem
@@ -91,6 +95,12 @@ export function PostDropdownMenu({ postId }: PostDropdownMenuProps) {
             </div>
           </div>
         </Alert>
+      )}
+
+      {UpdateModal && (
+        <UpdatePost
+         isOpen={true}
+         isClose={() => setUpdateModal(false)} />
       )}
     </>
   );
