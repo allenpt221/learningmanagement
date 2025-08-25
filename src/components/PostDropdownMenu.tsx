@@ -100,7 +100,8 @@ export function PostDropdownMenu({ postId }: PostDropdownMenuProps) {
       {UpdateModal && (
         <UpdatePost
          isOpen={true}
-         isClose={() => setUpdateModal(false)} />
+         isClose={() => setUpdateModal(false)} 
+         postId={postId}/>
       )}
     </>
   );
