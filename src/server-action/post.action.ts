@@ -406,27 +406,47 @@ export async function getNotificationById(id: string) {
 }
 
 
-export async function updatePost(formData: FormData, PostId: string) {
+export async function updatePost(formData: FormData, postId: string) {
   try {
-    const image = formData.get("image") as string;
+    const file = formData.get("image") as File | null;
     const content = formData.get("content") as string;
 
+    let imageUrl: string | undefined;
+
+    // Upload to Cloudinary if file exists
+    if (file && file.size > 0) {
+      const arrayBuffer = await file.arrayBuffer();
+      const buffer = Buffer.from(arrayBuffer);
+
+       const uploadRes = await new Promise<any>((resolve, reject) => {
+        const uploadStream = cloudinary.uploader.upload_stream(
+          { folder: "posts" }, 
+          (error, result) => {
+            if (error) reject(error);
+            else resolve(result);
+          }
+        );
+        uploadStream.end(buffer);
+      });
+
+      imageUrl = uploadRes.secure_url;
+    }
+
+    // Update post in database
     const updatedPost = await prisma.post.update({
-      where: {
-        id: PostId
-      },
+      where: { id: postId },
       data: {
-        image,
-        content
-      }
-    })
+        content,
+        ...(imageUrl ? { image: imageUrl } : {}),
+      },
+    });
 
-    revalidatePath('/')
+    revalidatePath("/");
 
-    return  updatedPost;
-
+    return updatedPost;
   } catch (error) {
-    console.log("Error Updating the post", error);
+    console.error("Error updating the post:", error);
+    throw error;
   }
 }
 
