@@ -88,7 +88,6 @@ async function Page({ params }: CommunityProps) {
                             <PostDelete postId={post.id} />
                         )}
                       </button>
-
                     )}
                   </div>
                   

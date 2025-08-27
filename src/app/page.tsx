@@ -75,8 +75,6 @@ export default async function Home() {
               )}
         
         <section className="bg-white rounded-lg shadow sm:p-6 p-2">
-          <h2 className="text-2xl font-semibold mb-6 text-gray-800">Recent Posts</h2>
-          
           {posts.length === 0 ? (
             <div className="bg-gray-50 rounded-lg p-8 text-center">
               <p className="text-gray-500">No posts available. Be the first to share something!</p>

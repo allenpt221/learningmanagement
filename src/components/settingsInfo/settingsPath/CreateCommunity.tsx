@@ -101,7 +101,6 @@ function CreateCommunity() {
                 placeholder='Enter Community Title'
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                required
                 className='focus-visible:ring-2 focus-visible:ring-primary'
               />
             </div>
@@ -114,7 +113,6 @@ function CreateCommunity() {
                 placeholder='What is this community about?'
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                required
                 className='focus-visible:ring-2 focus-visible:ring-primary'
               />
             </div>

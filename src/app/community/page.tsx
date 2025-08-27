@@ -1,10 +1,14 @@
+import { DropdownCommunity } from "@/components/Modal/DropdownCommunity";
 import PostContent from "@/components/PostContent";
+import { getProfile } from "@/server-action/auth.action";
 import { getCommunities } from "@/server-action/community.action";
 import Link from "next/link";
 
 export default async function Page() {
   const res = await getCommunities();
   const communities = res.community;
+
+  const profile = await getProfile();
 
   return (
     <div className="max-w-6xl mx-auto py-5 px-4">
@@ -19,9 +23,14 @@ export default async function Page() {
               key={community.id}
               className="flex flex-col p-4 border rounded-lg shadow-sm hover:shadow-md transition duration-300 h-full"
             >
-              <h2 className="text-lg font-bold mb-2 line-clamp-2">
-                {community.title}
-              </h2>
+              <div className="flex items-center justify-between mb-2 gap-1">
+                <h2 className="text-lg font-bold line-clamp-2">
+                  {community.title}
+                </h2>
+                {profile.user?.id === community.AuthorId && (
+                  <DropdownCommunity communityId={community.id}/>
+                )}
+              </div>
               
               <div className="flex-grow">
                 <p className="text-sm text-gray-600 mb-3">
