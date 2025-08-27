@@ -24,6 +24,37 @@ type UserProfile = {
   createdAt: Date;
 };
 
+function ProfileSkeleton() {
+  return (
+    <div className="animate-pulse">
+      <div className="flex flex-col items-center space-y-4 mb-6">
+        <div className="w-24 h-24 rounded-full bg-gray-200" />
+        <div className="h-4 w-32 bg-gray-200 rounded" />
+      </div>
+
+      <div className="flex gap-3">
+        <div className="flex-1">
+          <div className="h-4 w-20 bg-gray-200 rounded mb-2" />
+          <div className="h-10 w-full bg-gray-200 rounded" />
+        </div>
+        <div className="flex-1">
+          <div className="h-4 w-20 bg-gray-200 rounded mb-2" />
+          <div className="h-10 w-full bg-gray-200 rounded" />
+        </div>
+      </div>
+
+      <div className="mt-4">
+        <div className="h-4 w-20 bg-gray-200 rounded mb-2" />
+        <div className="h-10 w-full bg-gray-200 rounded" />
+      </div>
+
+      <div className="mt-8 flex justify-end">
+        <div className="h-9 w-28 bg-gray-200 rounded" />
+      </div>
+    </div>
+  );
+}
+
 export function ProfilePage({ isOpen, isClose }: ProfileModalProps) {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [userData, setUserData] = useState({
@@ -31,6 +62,7 @@ export function ProfilePage({ isOpen, isClose }: ProfileModalProps) {
     lastname: "",
     username: ""
   });
+  const [loading, setLoading] = useState(true);
 
   const router = useRouter();
 
@@ -42,6 +74,7 @@ export function ProfilePage({ isOpen, isClose }: ProfileModalProps) {
     if (!isOpen) return;
 
     const fetchProfile = async () => {
+      setLoading(true);
       try {
         const data = await getProfile();
         if (data?.user) {
@@ -59,6 +92,8 @@ export function ProfilePage({ isOpen, isClose }: ProfileModalProps) {
       } catch (error) {
         console.error('Failed to fetch profile', error);
         setProfile(null);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -85,11 +120,9 @@ export function ProfilePage({ isOpen, isClose }: ProfileModalProps) {
       formData.append("firstname", userData.firstname);
       formData.append("lastname", userData.lastname);
 
-
       if (imageFile) {
         formData.append("image", imageFile); // send file, not preview string
       }
-
 
       const result = await updateProfile(formData);
 
@@ -133,65 +166,69 @@ export function ProfilePage({ isOpen, isClose }: ProfileModalProps) {
           <p className="text-sm text-gray-500">Manage your personal info</p>
         </div>
 
-        <form onSubmit={handleSave}>
-          <div className="flex flex-col items-center space-y-4 mb-6">
-            <div className="relative w-24 h-24">
-              <img
-                src={imagePreview || '/placeholder.png'}
-                alt="Profile"
-                className="w-24 h-24 rounded-full object-cover border"
-              />
-              <Label className="absolute bottom-0 right-0 bg-white rounded-full p-1 shadow-sm cursor-pointer hover:shadow-md transition">
-                <Input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageChange}
-                  className="hidden"
+        {loading ? (
+          <ProfileSkeleton />
+        ) : (
+          <form onSubmit={handleSave}>
+            <div className="flex flex-col items-center space-y-4 mb-6">
+              <div className="relative w-24 h-24">
+                <img
+                  src={imagePreview || '/placeholder.png'}
+                  alt="Profile"
+                  className="w-24 h-24 rounded-full object-cover border"
                 />
-                <span className="text-xs text-gray-500">Edit</span>
-              </Label>
+                <Label className="absolute bottom-0 right-0 bg-white rounded-full p-1 shadow-sm cursor-pointer hover:shadow-md transition">
+                  <Input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageChange}
+                    className="hidden"
+                  />
+                  <span className="text-xs text-gray-500">Edit</span>
+                </Label>
+              </div>
+              <p className="text-sm text-gray-600">{profile?.email}</p>
             </div>
-            <p className="text-sm text-gray-600">{profile?.email}</p>
-          </div>
 
-          <div className='flex gap-3'>
+            <div className='flex gap-3'>
+              <div>
+                <Label className="block text-sm text-gray-600 mb-1">First Name</Label>
+                <Input
+                  type="text"
+                  value={userData.firstname}
+                  onChange={(e) => setUserData({ ...userData, firstname: e.target.value })}
+                />
+              </div>
+              <div>
+                <Label className="block text-sm text-gray-600 mb-1">Last Name</Label>
+                <Input
+                  type="text"
+                  value={userData.lastname}
+                  onChange={(e) => setUserData({ ...userData, lastname: e.target.value })}
+                />
+              </div>
+            </div>
+
             <div>
-              <Label className="block text-sm text-gray-600 mb-1">First Name</Label>
+              <Label className="block text-sm text-gray-600 mb-1">Username</Label>
               <Input
                 type="text"
-                value={userData.firstname}
-                onChange={(e) => setUserData({ ...userData, firstname: e.target.value })}
+                value={userData.username}
+                onChange={(e) => setUserData({ ...userData, username: e.target.value })}
               />
             </div>
-            <div>
-              <Label className="block text-sm text-gray-600 mb-1">Last Name</Label>
-              <Input
-                type="text"
-                value={userData.lastname}
-                onChange={(e) => setUserData({ ...userData, lastname: e.target.value })}
-              />
+
+            <div className="mt-8 flex justify-end items-center">
+              <button
+                type="submit"
+                disabled={saving}
+                className="bg-black hover:bg-black/70 text-white font-medium text-sm px-4 py-2 rounded-md disabled:opacity-50"
+              >
+                {saving ? 'Saving...' : 'Save Changes'}
+              </button>
             </div>
-          </div>
-
-          <div>
-            <Label className="block text-sm text-gray-600 mb-1">Username</Label>
-            <Input
-              type="text"
-              value={userData.username}
-              onChange={(e) => setUserData({ ...userData, username: e.target.value })}
-            />
-          </div>
-
-          <div className="mt-8 flex justify-end items-center">
-            <button
-              type="submit"
-              disabled={saving}
-              className="bg-black hover:bg-black/70 text-white font-medium text-sm px-4 py-2 rounded-md disabled:opacity-50"
-            >
-              {saving ? 'Saving...' : 'Save Changes'}
-            </button>
-          </div>
-        </form>
+          </form>
+        )}
       </motion.div>
     </div>
   );
