@@ -27,6 +27,9 @@ export async function createCommunity(formData: FormData) {
     const description = formData.get("description") as string;
     const image = formData.get('image') as File | null;
 
+    if(!title || !description || !image){
+      return { success: false, message: "Please fill in all fields including an image."}
+    }
 
     let imageUrl: string | null = null;
 
@@ -285,4 +288,17 @@ export async function getCommunityPostById(postId: string) {
   }
 }
 
+export async function deleteCommunity(communityId: string){
+  try {
+    await prisma.community.delete({
+      where: {
+        id: communityId
+      }
+    });
+
+    revalidatePath('/community');
+  } catch (error) {
+    console.error("error deleting the community", error);
+  }
+}
 
