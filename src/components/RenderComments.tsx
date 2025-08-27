@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { formatDistanceToNow } from "date-fns";
 import { User, Comment as PrismaComment, DepartmentType } from "@/generated/prisma";
+import { Trash2 } from "lucide-react";
+import { deletePostComment } from "@/server-action/post.action";
 
 type CommentWithAuthor = PrismaComment & { author: User };
 
@@ -87,8 +89,14 @@ export function CommentsTree({
       );
       setEditingCommentId(null);
       setEditingContent("");
-    } else {
-      alert("Failed to update comment: " + (res.error ?? "Unknown error"));
+    }
+  }
+
+  async function handleDeleteComment(commentId: string) {
+    const res = await deletePostComment(commentId);
+
+    if (res?.success) {
+      setComments(prev => prev.filter(c => c.id !== commentId)); 
     }
   }
 
@@ -124,9 +132,17 @@ export function CommentsTree({
                     className="w-full border rounded px-2 py-1 text-sm"
                   />
                 ) : (
-                  <span className="text-sm text-gray-800 break-words sm:w-full w-[9rem]">
+                  <div className="flex space-x-1 items-center">
+                    <span className="text-sm text-gray-800 break-words sm:w-full w-[9rem]">
                     {comment.content}
                   </span>
+                  {auth?.id === comment.authorId && (
+                    <button className="text-red-600"
+                    onClick={() => handleDeleteComment(comment.id)}>
+                      <Trash2 size={13} />
+                    </button>
+                  )}
+                  </div>
                 )}
                 <p className="text-xs text-gray-500 whitespace-nowrap mt-auto">
                   {formatDistanceToNow(new Date(comment.createdAt), { addSuffix: true })}

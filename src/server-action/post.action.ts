@@ -129,7 +129,7 @@ export async function deletePost(postId: string){
 
     revalidatePath('/')
 
-    return { success:true, deletedPost };
+    return { success:true , deletedPost };
   } catch (error) {
     throw new Error("Deleting Post");
   }
@@ -472,4 +472,15 @@ export async function getPostById(postId: string){
   }
 }
 
+export async function deletePostComment(commentId: string) {
+  try {
+    await prisma.comment.delete({ where: { id: commentId } });
+    revalidatePath("/");
+
+    return { success: true };
+  } catch (error) {
+    console.error("Error deleting comment in post", error);
+    return { success: false };
+  }
+}
 
