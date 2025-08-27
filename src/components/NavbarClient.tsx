@@ -109,7 +109,7 @@ export default function NavbarClient({ profile, notif = [] }: { profile: any, no
                           <AvatarImage src={notify.creator?.image || ''} />
                           <AvatarFallback>{notify.creator?.username?.charAt(0).toUpperCase() ?? "?"}</AvatarFallback>
                         </Avatar>
-                        <div className='flex justify-between w-full items-end'>
+                        <div className='flex sm:justify-between sm:flex-row flex-col justify-start w-full '>
                           <div className="flex flex-col">
                             <span className="text-sm font-medium">{notify.creator?.username ?? "Unknown user"}</span>
                             <span className="text-xs text-muted-foreground">

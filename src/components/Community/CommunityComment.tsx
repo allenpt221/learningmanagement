@@ -72,7 +72,7 @@ function CommunityComment({
           <div className="mt-2 text-sm text-gray-600 space-y-3">
             {post.communitycomment && post.communitycomment.length > 0 ? (
               post.communitycomment.map((comment: any) => (
-                <div className="flex justify-between w-full">
+                <div className="flex flex-col justify-between w-full overflow-hidden">
                   <div key={comment.id} className="flex items-center gap-2">
                     <img
                       src={comment.author.image}
@@ -83,7 +83,7 @@ function CommunityComment({
                       <p className="font-medium text-gray-900 text-sm">
                         {comment.author.firstname} {comment.author.lastname}
                       </p>
-                      <p className="text-gray-700 text-sm">
+                      <p className="text-gray-700 text-sm line-clamp-1">
                         {comment.contentcomment}
                       </p>
                     </div>
@@ -108,7 +108,7 @@ function CommunityComment({
 
                     )}
                   </div>
-                    <div>
+                    <div className="text-right">
                       {formatDistanceToNow(new Date(comment.createdAt), { addSuffix: true})}
                     </div>
                 </div>    
