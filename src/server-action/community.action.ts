@@ -302,3 +302,56 @@ export async function deleteCommunity(communityId: string){
   }
 }
 
+export async function updateCommunity(formData: FormData ,communityId: string){
+  try {
+
+    const title = formData.get("title") as string;
+    const description = formData.get("description") as string;
+    const image = formData.get("image") as File | null;
+
+
+    if(!title || !description || !image){
+      return { success: false, message: "All field are required" }
+    };
+
+    let imageUrl: string | undefined;
+
+    if(image && image.size > 0){
+      const arrayBuffer = await image.arrayBuffer();
+      const buffer = Buffer.from(arrayBuffer);
+
+      const uploadRes = await new Promise<any>((resolve, reject) => {
+              const uploadStream = cloudinary.uploader.upload_stream(
+                { folder: "posts" }, 
+                (error, result) => {
+                  if (error) reject(error);
+                  else resolve(result);
+                }
+              );
+              uploadStream.end(buffer);
+            });
+      
+            imageUrl = uploadRes.secure_url;
+    }
+
+    const updateCommunity = await prisma.community.update({
+      where: {
+        id: communityId
+      },
+      data:{
+        title,
+        description,
+        ...(imageUrl ? { image: imageUrl } : {}),
+      }
+    })
+
+    revalidatePath('/community')
+
+    return { success: true, updateCommunity };
+
+  } catch (error) {
+    console.log("Error updating the community", error);
+    throw error;
+  }
+}
+
