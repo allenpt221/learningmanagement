@@ -76,7 +76,7 @@ function CommunityComment({
                   <div key={comment.id} className="flex items-center gap-2">
                     <img
                       src={comment.author.image}
-                      alt=""
+                      alt="error fetching the image"
                       className="w-8 h-8 rounded-full"
                     />
                     <div>
