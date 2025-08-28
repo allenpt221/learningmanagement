@@ -138,6 +138,7 @@ function UpdateCommunity({ isOpen, isClose, communityId }: updateModalProps) {
             onChange={(e) =>
               setCommunity((prev) => ({ ...prev, title: e.target.value }))
             }
+            maxLength={35}
           />
 
           {/* Description */}
@@ -149,6 +150,7 @@ function UpdateCommunity({ isOpen, isClose, communityId }: updateModalProps) {
             onChange={(e) =>
               setCommunity((prev) => ({ ...prev, description: e.target.value }))
             }
+            maxLength={100}
           />
 
           {/* Image upload / preview */}

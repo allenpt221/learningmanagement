@@ -84,6 +84,9 @@ export async function getCommunities() {
       include: {
         author: true,
       },
+      orderBy: {
+        createdAt: "asc"
+      }
     });
 
     return { community: communities }; 
@@ -288,19 +291,34 @@ export async function getCommunityPostById(postId: string) {
   }
 }
 
-export async function deleteCommunity(communityId: string){
+export async function deleteCommunity(communityId: string) {
   try {
-    await prisma.community.delete({
-      where: {
-        id: communityId
-      }
+    const community = await prisma.community.findUnique({
+      where: { id: communityId },
+      select: { image: true } // assuming you saved it
     });
 
-    revalidatePath('/community');
+    if (!community) {
+      return { success: false, message: "Community not found" };
+    }
+
+    // Delete image from Cloudinary if it exists
+    if (community.image) {
+      await cloudinary.uploader.destroy(community.image);
+    }
+    await prisma.community.delete({
+      where: { id: communityId }
+    });
+
+    revalidatePath("/community");
+
+    return { success: true, message: "Community deleted successfully" };
   } catch (error) {
-    console.error("error deleting the community", error);
+    console.error("Error deleting the community", error);
+    return { success: false, message: "Error deleting the community" };
   }
 }
+
 
 export async function updateCommunity(formData: FormData ,communityId: string){
   try {
@@ -310,7 +328,7 @@ export async function updateCommunity(formData: FormData ,communityId: string){
     const image = formData.get("image") as File | null;
 
 
-    if(!title || !description || !image){
+    if(!title || !description){
       return { success: false, message: "All field are required" }
     };
 

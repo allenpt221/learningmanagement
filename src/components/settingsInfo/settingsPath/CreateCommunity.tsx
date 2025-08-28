@@ -102,6 +102,7 @@ function CreateCommunity() {
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 className='focus-visible:ring-2 focus-visible:ring-primary'
+                maxLength={35}
               />
             </div>
             <div className='space-y-2'>
@@ -112,6 +113,7 @@ function CreateCommunity() {
                 type='text'
                 placeholder='What is this community about?'
                 value={description}
+                maxLength={100}
                 onChange={(e) => setDescription(e.target.value)}
                 className='focus-visible:ring-2 focus-visible:ring-primary'
               />
