@@ -1,16 +1,15 @@
+// next.config.js
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  webpack: (config, { isServer }) => {
+  webpack: (config) => {
     config.watchOptions = {
       ignored: [
-        /node_modules/,
-        /\.git/,
-        /C:\/Users\/.*\/Cookies/,
-        /C:\/Users\/.*\/AppData/,
-      ]
-    }
-    return config
-  }
-}
+        '**/node_modules/**',
+        '**/C:/Users/allen/Application Data/**', // use glob pattern instead of path.resolve
+      ],
+    };
+    return config;
+  },
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;
