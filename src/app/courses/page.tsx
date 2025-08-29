@@ -6,7 +6,7 @@ import Marketing from '@/Images/marketing.png'
 
 
 
-export const courses = [
+export const mapCourses = [
   {
     id: "f64d6c2f-131a-41e2-bb45-ced198035f5e",
     course: "TypeScript",
@@ -65,7 +65,7 @@ export default function Page() {
       <h1 className="text-xl text-center mb-8 md:w-[50rem] mx-auto">Explore a diverse range of courses from modern technologies to engineering principles and business strategies.</h1>
 
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {courses.map((course) => (
+        {mapCourses.map((course) => (
           <div
             key={course.id}
             className="flex flex-col rounded-2xl shadow-md hover:shadow-lg transition-shadow overflow-hidden bg-white"

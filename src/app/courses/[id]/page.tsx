@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { courses } from "../page";
+import { mapCourses } from "../page";
 import Link from "next/link";
 
 export async function generateMetadata({
@@ -7,7 +7,7 @@ export async function generateMetadata({
 }: {
   params: { id: string };
 }): Promise<Metadata> {
-  const course = courses.find((c) => c.id === params.id);
+  const course = mapCourses.find((c) => c.id === params.id);
 
   if (!course) {
     return {
@@ -28,7 +28,7 @@ export async function generateMetadata({
 }
 
 export default function CoursePage({ params }: { params: { id: string } }) {
-  const course = courses.find((c) => c.id === params.id);
+  const course = mapCourses.find((c) => c.id === params.id);
 
   if (!course) {
     return (
