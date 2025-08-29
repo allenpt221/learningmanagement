@@ -1,5 +1,5 @@
+import { mapCourses } from "@/lib/courses";
 import type { Metadata } from "next";
-import { mapCourses } from "../page";
 import Link from "next/link";
 
 export async function generateMetadata({
