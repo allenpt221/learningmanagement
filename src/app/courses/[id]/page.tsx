@@ -27,7 +27,7 @@ export async function generateMetadata({
   };
 }
 
-export default function CoursePage({ params }: { params: { id: string } }) {
+export default function Page({ params }: { params: { id: string } }) {
   const course = mapCourses.find((c) => c.id === params.id);
 
   if (!course) {
