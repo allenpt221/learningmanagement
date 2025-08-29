@@ -76,7 +76,7 @@ export default function CoursePage({ params }: { params: { id: string } }) {
           To begin, ensure you have the proper environment set up. Follow the
           installation guide and prerequisites before diving into the lessons.
         </p>
-
+        <h1 className="text-center py-2 font-medium">TBA</h1>
       </article>
 
       {/* Footer navigation */}
