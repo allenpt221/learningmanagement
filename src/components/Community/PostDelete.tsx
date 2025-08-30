@@ -3,7 +3,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Button } from '@/components/ui/button';
 import {  Ellipsis, SquarePen, Trash } from 'lucide-react';
 
-import { deleteCommunityPost } from "@/server-action/community.action";
+import { deleteCommunityPost } from "@/action/community.action";
 import { useParams } from "next/navigation";
 import { useState } from "react";
 import UpdateCommunityPost from "../Modal/UpdateCommunityPost";

@@ -1,5 +1,5 @@
 'use client'
-import { createCommunityPost } from '@/server-action/community.action';
+import { createCommunityPost } from '@/action/community.action';
 import { CircleCheckBig, SendHorizontal } from 'lucide-react';
 import { useParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';

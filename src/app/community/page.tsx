@@ -1,7 +1,7 @@
-import { DropdownCommunity } from "@/components/Modal/DropdownCommunity";
+import DropdownCommunity from "@/components/Modal/DropdownCommunity";
 import PostContent from "@/components/PostContent";
-import { getProfile } from "@/server-action/auth.action";
-import { getCommunities } from "@/server-action/community.action";
+import { getProfile } from "@/action/auth.action";
+import { getCommunities } from "@/action/community.action";
 import Link from "next/link";
 
 async function Page() {
@@ -33,9 +33,9 @@ async function Page() {
               </div>
               
               <div className="flex-grow">
-                <p className="text-sm text-gray-600 mb-3">
+                <span className="text-sm text-gray-600 mb-3">
                   <PostContent content={community.description} />
-                </p>
+                </span>
                 
                 {community.image && (
                   <img

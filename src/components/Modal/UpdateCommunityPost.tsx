@@ -1,7 +1,7 @@
 'use client'
 import { X } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
-import { getCommunityPostById, updatePostCommunity } from '@/server-action/community.action';
+import { getCommunityPostById, updatePostCommunity } from '@/action/community.action';
 import { formatDistanceToNow } from 'date-fns';
 
 interface ModalProps {

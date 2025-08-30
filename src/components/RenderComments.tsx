@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { formatDistanceToNow } from "date-fns";
 import { User, Comment as PrismaComment, DepartmentType } from "@/generated/prisma";
 import { Trash2 } from "lucide-react";
-import { deletePostComment } from "@/server-action/post.action";
+import { deletePostComment } from "@/action/post.action";
 
 type CommentWithAuthor = PrismaComment & { author: User };
 
@@ -39,7 +39,7 @@ interface CommentsTreeProps {
   auth: AuthUser | null;
 }
 
-export function CommentsTree({
+function CommentsTree({
   comments,
   currentUserId,
   replyToCommentId,
@@ -241,3 +241,5 @@ export function CommentsTree({
 
   return <>{renderComments(undefined)}</>;
 }
+
+export default CommentsTree;

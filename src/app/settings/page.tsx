@@ -1,6 +1,6 @@
 
 import SettingsInfo from '@/components/settingsInfo/Settings'
-import { getProfile } from '@/server-action/auth.action'
+import { getProfile } from '@/action/auth.action'
 import { redirect } from 'next/navigation';
 import React from 'react'
 

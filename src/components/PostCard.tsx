@@ -4,15 +4,15 @@ import { useEffect, useState } from "react";
 import { CircleCheckBig, Dot, MessageCircle, ThumbsUp } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 
-import { createComment, toggleLikes, updateComment } from "@/server-action/post.action";
-import { PostDropdownMenu } from "./PostDropdownMenu";
+import { createComment, toggleLikes, updateComment } from "@/action/post.action";
 import PostContent from "./PostContent";
 
 import { Post as PrismaPost, User, Comment as PrismaComment, DepartmentType } from "@/generated/prisma";
 import { Alert, AlertDescription, AlertTitle } from "./ui/alert";
-import { CommentsTree } from "./RenderComments";
 import { Button } from "./ui/button";
 import Link from "next/link";
+import PostDropdownMenu from "./PostDropdownMenu";
+import CommentsTree from "./RenderComments";
 
 type CommentWithAuthor = PrismaComment & { author: User };
 
@@ -52,7 +52,7 @@ interface PostCardProps {
   auth: AuthUser | null;
 }
 
-export function PostCard({ post, isAuthor, currentUserId, auth }: PostCardProps) {
+function PostCard({ post, isAuthor, currentUserId, auth }: PostCardProps) {
     
   const [newComment, setNewComment] = useState("");
   const [isCommenting, setIsCommenting] = useState(false);
@@ -298,3 +298,5 @@ export function PostCard({ post, isAuthor, currentUserId, auth }: PostCardProps)
     </article>
   );
 }
+
+export default PostCard;

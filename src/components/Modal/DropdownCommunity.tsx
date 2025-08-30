@@ -1,18 +1,17 @@
 "use client";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
-import { useEffect, useState } from "react";
-import { CircleCheckBig, Ellipsis } from "lucide-react";
-import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
+import { useState } from "react";
+import { Ellipsis } from "lucide-react";
 import { Button } from "../ui/button";
-import { ConfirmationDeletion } from "./ConfirmationDeletion";
-import { deleteCommunity } from "@/server-action/community.action";
+import { deleteCommunity } from "@/action/community.action";
 import UpdateCommunity from "./UpdateCommunity";
+import ConfirmationDeletion from "./ConfirmationDeletion";
 
 interface PostDropdownMenuProps {
   communityId: string;
 }
 
-export function DropdownCommunity({ communityId }: PostDropdownMenuProps) {
+function DropdownCommunity({ communityId }: PostDropdownMenuProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [UpdateModal, setUpdateModal] = useState(false)
 
@@ -66,3 +65,5 @@ export function DropdownCommunity({ communityId }: PostDropdownMenuProps) {
     </>
   );
 }
+
+export default DropdownCommunity;

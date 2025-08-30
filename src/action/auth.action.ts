@@ -118,7 +118,9 @@ export async function LogIn(formData: FormData): Promise<AuthResponse> {
 
     const { accessToken, refreshToken } = generateTokens(user.id);
 
-    cookies().set('accessToken', accessToken, {
+    const cookieStore = await cookies();
+
+    cookieStore.set('accessToken', accessToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       path: '/',
@@ -145,7 +147,7 @@ export async function LogIn(formData: FormData): Promise<AuthResponse> {
 
 export async function LogOut(){
 
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
 
   cookieStore.delete('accessToken')
   cookieStore.delete('refreshToken')
@@ -156,7 +158,8 @@ export async function LogOut(){
 
 export async function getProfile() {
   try {
-    const token = cookies().get('accessToken')?.value;
+    const cookieStore = await cookies();
+    const token = cookieStore.get('accessToken')?.value;
 
     if (!token) {
       return { success: false, message: 'Unauthorized' };

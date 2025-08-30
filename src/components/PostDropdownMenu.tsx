@@ -1,18 +1,18 @@
 "use client";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
-import { deletePost } from "@/server-action/post.action";
+import { deletePost } from "@/action/post.action";
 import { useEffect, useState } from "react";
 import { CircleCheckBig, Ellipsis } from "lucide-react";
 import { Button } from "./ui/button";
-import { ConfirmationDeletion } from "./Modal/ConfirmationDeletion";
 import { Alert, AlertDescription, AlertTitle } from "./ui/alert";
 import UpdatePost from "./Modal/UpdatePost";
+import ConfirmationDeletion from "./Modal/ConfirmationDeletion";
 
 interface PostDropdownMenuProps {
   postId: string;
 }
 
-export function PostDropdownMenu({ postId }: PostDropdownMenuProps) {
+function PostDropdownMenu({ postId }: PostDropdownMenuProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [UpdateModal, setUpdateModal] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false);
@@ -106,3 +106,5 @@ export function PostDropdownMenu({ postId }: PostDropdownMenuProps) {
     </>
   );
 }
+
+export default PostDropdownMenu;

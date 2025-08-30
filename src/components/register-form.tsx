@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Signup } from '@/server-action/auth.action';
+import { Signup } from '@/action/auth.action';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
@@ -10,7 +10,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { CircleCheckBig, CircleX } from 'lucide-react';
 import Link from 'next/link';
 
-export function SignupForm({
+function SignupForm({
   className,
   ...props
 }: React.ComponentProps<'form'>) {
@@ -213,3 +213,5 @@ export function SignupForm({
     </form>
   );
 }
+
+export default SignupForm;

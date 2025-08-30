@@ -36,21 +36,21 @@ const mapCourses = [
   {
     id: "ad1f90b2-87cb-43f6-9f12-6cf032b674aa",
     course: "Electrical Engineering",
-    img: Electrical,
+    img: Electrical.src,
     descrip: "Learn circuits, electronics, and power systems to build modern electrical solutions.",
   },
   {
     id: "6e91d51c-2e2c-4d67-9b4d-1a27d4cc5a9e",
     course: "Business Management",
-    img: BusinnesMarketing,
+    img: BusinnesMarketing.src,
     descrip: "Understand leadership, organizational behavior, and strategic management.",
   },
   {
     id: "c95b2f3e-53c1-4df0-9c59-3f45e2445b7d",
     course: "Marketing",
-    img: Marketing,
+    img: Marketing.src,
     descrip: "Learn market research, branding, and digital marketing strategies.",
   },
 ];
 
-export default mapCourses;
+export default mapCourses

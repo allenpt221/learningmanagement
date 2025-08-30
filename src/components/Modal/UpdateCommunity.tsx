@@ -1,5 +1,5 @@
 'use client';
-import { getCommunityById, updateCommunity } from '@/server-action/community.action';
+import { getCommunityById, updateCommunity } from '@/action/community.action';
 import { X, Trash2, Upload, CircleCheckBig } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { Input } from '../ui/input';

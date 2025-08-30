@@ -7,7 +7,7 @@ interface ConfirmationDeletionProps {
   message?: string;
 }
 
-export function ConfirmationDeletion({
+function ConfirmationDeletion({
   isOpen,
   onConfirm,
   onCancel,
@@ -45,3 +45,5 @@ export function ConfirmationDeletion({
     </div>
   );
 }
+
+export default ConfirmationDeletion;

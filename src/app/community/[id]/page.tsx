@@ -1,12 +1,12 @@
 import { Metadata } from 'next';
 import React from 'react';
-import { getCommunityById, getCommunityPost } from '@/server-action/community.action';
+import { getCommunityById, getCommunityPost } from '@/action/community.action';
 import Link from 'next/link';
 import { formatDistanceToNow } from "date-fns";
 import { Clock,  FileText,  MessageSquareMore, UserRound, UserRoundX } from 'lucide-react';
 import CommunityPost from '@/components/Community/CommunityPost';
 import CommunityComment from '@/components/Community/CommunityComment';
-import { getProfile } from '@/server-action/auth.action';
+import { getProfile } from '@/action/auth.action';
 import PostDelete from '@/components/Community/PostDelete';
 
 interface CommunityProps {

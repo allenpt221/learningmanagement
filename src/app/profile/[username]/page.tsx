@@ -1,12 +1,12 @@
 import { notFound } from 'next/navigation';
-import { getFollowers, getFollowing, getProfileByUsername, getUserPosts } from '@/server-action/profile.action';
-import { getProfile } from '@/server-action/auth.action';
+import { getFollowers, getFollowing, getProfileByUsername, getUserPosts } from '@/action/profile.action';
+import { getProfile } from '@/action/auth.action';
 import ProfileModal from '../ProfileModal';
 import type { Metadata } from 'next';
-import { ProfileContent } from '../ProfileContent';
 import FollowButton from '@/components/FollowButton';
 import Following from '../Following';
 import Follower from '../Follower';
+import ProfileContent from '../ProfileContent';
 
 // Constants
 const DEPARTMENT_MAP = {
@@ -20,7 +20,7 @@ interface ProfilePageProps {
 }
 
 export async function generateMetadata({ params }: ProfilePageProps): Promise<Metadata> {
-  const user = await getProfileByUsername(params.username);
+  const user = await getProfileByUsername(params?.username);
   
   if (!user) return {
     title: 'Profile not found'
@@ -34,7 +34,7 @@ export async function generateMetadata({ params }: ProfilePageProps): Promise<Me
 
 async function ProfilePage({ params }: ProfilePageProps) {
 
-  const profile = await getProfile(); // logged-in user
+  const profile = await getProfile(); 
   const user = await getProfileByUsername(params.username, profile?.user?.id);
 
   if (!user) {

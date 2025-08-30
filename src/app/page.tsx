@@ -1,11 +1,11 @@
 // app/page.tsx
 
 import CreatePost from "@/components/CreatePost";
-import { getProfile, getRandomUsers } from "@/server-action/auth.action";
-import { getPostsByDepartmentType, getThePost } from "@/server-action/post.action";
-import { PostCard } from "@/components/PostCard";
+import { getProfile, getRandomUsers } from "@/action/auth.action";
+import { getPostsByDepartmentType, getThePost } from "@/action/post.action";
 import FollowButton from "@/components/FollowButton";
 import Link from "next/link";
+import PostCard from "@/components/PostCard";
 
 export const DEPARTMENT_MAP = {
   CCS: 'College of Computing Studies',

@@ -1,6 +1,6 @@
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { createCommunity } from '@/server-action/community.action';
+import { createCommunity } from '@/action/community.action';
 import React, { useEffect, useState } from 'react';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';

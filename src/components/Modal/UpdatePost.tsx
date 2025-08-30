@@ -1,5 +1,5 @@
 'use client'
-import { getPostById, updatePost } from '@/server-action/post.action';
+import { getPostById, updatePost } from '@/action/post.action';
 import { X, Upload } from 'lucide-react';
 import React, { useEffect, useState, useRef } from 'react'
 import { formatDistanceToNow } from 'date-fns';

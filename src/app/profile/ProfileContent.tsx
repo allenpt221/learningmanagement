@@ -5,10 +5,10 @@ import PostContent from "@/components/PostContent";
 import { formatDistanceToNow } from "date-fns";
 import { CircleCheckBig, Dot, MessageCircle, MoreHorizontal, ThumbsUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { createComment, toggleLikes, updateComment, deletePost,  } from "@/server-action/post.action";
-import { CommentsTree } from "@/components/RenderComments";
-import { PostDropdownMenu } from "@/components/PostDropdownMenu";
+import { createComment, toggleLikes, updateComment } from "@/action/post.action";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import PostDropdownMenu from "@/components/PostDropdownMenu";
+import CommentsTree from "@/components/RenderComments";
 
 interface ProfileProps {
   post: {
@@ -30,7 +30,7 @@ interface ProfileProps {
   onPostUpdated?: (postId: string, newContent: string) => void;
 }
 
-export function ProfileContent({
+function ProfileContent({
   post,
   currentUserId,
   authUser,
@@ -271,3 +271,6 @@ export function ProfileContent({
     </div>
   );
 }
+
+
+export default ProfileContent;
