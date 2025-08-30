@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
-import { LogIn } from "@/action/auth.action";
+import { LogIn } from "@/actions/auth.action";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { CircleCheckBig, MessageCircleWarning } from "lucide-react";
 import Link from "next/link";

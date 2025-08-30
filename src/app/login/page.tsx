@@ -1,6 +1,6 @@
 import { GalleryVerticalEnd } from "lucide-react"
 
-import { getProfile } from "@/action/auth.action";
+import { getProfile } from "@/actions/auth.action";
 import { redirect } from "next/navigation";
 import LoginForm from "@/components/login-form";
 

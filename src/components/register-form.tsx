@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Signup } from '@/action/auth.action';
+import { Signup } from '@/actions/auth.action';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';

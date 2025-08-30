@@ -1,7 +1,7 @@
 import DropdownCommunity from "@/components/Modal/DropdownCommunity";
 import PostContent from "@/components/PostContent";
-import { getProfile } from "@/action/auth.action";
-import { getCommunities } from "@/action/community.action";
+import { getProfile } from "@/actions/auth.action";
+import { getCommunities } from "@/actions/community.action";
 import Link from "next/link";
 
 async function Page() {

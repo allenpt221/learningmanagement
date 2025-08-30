@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { CircleCheckBig, Dot, MessageCircle, ThumbsUp } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 
-import { createComment, toggleLikes, updateComment } from "@/action/post.action";
+import { createComment, toggleLikes, updateComment } from "@/actions/post.action";
 import PostContent from "./PostContent";
 
 import { Post as PrismaPost, User, Comment as PrismaComment, DepartmentType } from "@/generated/prisma";

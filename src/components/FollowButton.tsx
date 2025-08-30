@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { toggleFollow } from "@/action/auth.action";
+import { toggleFollow } from "@/actions/auth.action";
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { CircleX } from "lucide-react";

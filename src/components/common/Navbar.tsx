@@ -1,7 +1,7 @@
 // components/Navbar.tsx
-import { getProfile } from '@/action/auth.action';
+import { getProfile } from '@/actions/auth.action';
 import NavbarClient from '../NavbarClient';
-import { getNotifications } from '@/action/post.action';
+import { getNotifications } from '@/actions/post.action';
 
 async function Navbar() {
   const profile = await getProfile();

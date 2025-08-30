@@ -2,7 +2,7 @@
 
 import { Ellipsis, MessageCircle, Trash } from "lucide-react";
 import React, { useState } from "react";
-import { createCommentCommunity, deleteCommunityComment } from "@/action/community.action";
+import { createCommentCommunity, deleteCommunityComment } from "@/actions/community.action";
 import { useParams } from "next/navigation";
 import { formatDistanceToNow } from "date-fns";
 

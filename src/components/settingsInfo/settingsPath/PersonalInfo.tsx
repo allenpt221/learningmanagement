@@ -1,4 +1,4 @@
-import { getProfile } from '@/action/auth.action'
+import { getProfile } from '@/actions/auth.action'
 import { CircleQuestionMark } from 'lucide-react';
 import React from 'react'
 import { Input } from '../../ui/input';

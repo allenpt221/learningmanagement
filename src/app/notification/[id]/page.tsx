@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { formatDistanceToNow } from 'date-fns';
-import { getNotificationById } from '@/action/post.action';
+import { getNotificationById } from '@/actions/post.action';
 import PostContent from '@/components/PostContent';
 
 const NotificationPage = () => {

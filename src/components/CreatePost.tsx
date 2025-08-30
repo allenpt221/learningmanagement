@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { Image as ImageIcon, X } from "lucide-react";
-import { createPost } from "@/action/post.action";
+import { createPost } from "@/actions/post.action";
 
 interface ProfileType {
   image?: string;

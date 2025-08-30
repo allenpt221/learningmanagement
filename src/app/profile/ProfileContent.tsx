@@ -5,7 +5,7 @@ import PostContent from "@/components/PostContent";
 import { formatDistanceToNow } from "date-fns";
 import { CircleCheckBig, Dot, MessageCircle, MoreHorizontal, ThumbsUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { createComment, toggleLikes, updateComment } from "@/action/post.action";
+import { createComment, toggleLikes, updateComment } from "@/actions/post.action";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import PostDropdownMenu from "@/components/PostDropdownMenu";
 import CommentsTree from "@/components/RenderComments";

@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { getProfile } from '@/action/auth.action';
-import { updateProfile } from '@/action/profile.action';
+import { getProfile } from '@/actions/auth.action';
+import { updateProfile } from '@/actions/profile.action';
 import { X } from 'lucide-react';
 import { Label } from '../ui/label';
 import { Input } from '../ui/input';

@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
-import { getFollowers, getFollowing, getProfileByUsername, getUserPosts } from '@/action/profile.action';
-import { getProfile } from '@/action/auth.action';
+import { getFollowers, getFollowing, getProfileByUsername, getUserPosts } from '@/actions/profile.action';
+import { getProfile } from '@/actions/auth.action';
 import ProfileModal from '../ProfileModal';
 import type { Metadata } from 'next';
 import FollowButton from '@/components/FollowButton';

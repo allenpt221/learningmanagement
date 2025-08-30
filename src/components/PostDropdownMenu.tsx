@@ -1,6 +1,6 @@
 "use client";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
-import { deletePost } from "@/action/post.action";
+import { deletePost } from "@/actions/post.action";
 import { useEffect, useState } from "react";
 import { CircleCheckBig, Ellipsis } from "lucide-react";
 import { Button } from "./ui/button";

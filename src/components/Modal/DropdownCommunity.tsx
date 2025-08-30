@@ -3,7 +3,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { useState } from "react";
 import { Ellipsis } from "lucide-react";
 import { Button } from "../ui/button";
-import { deleteCommunity } from "@/action/community.action";
+import { deleteCommunity } from "@/actions/community.action";
 import UpdateCommunity from "./UpdateCommunity";
 import ConfirmationDeletion from "./ConfirmationDeletion";
 

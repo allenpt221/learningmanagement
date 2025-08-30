@@ -3,7 +3,7 @@
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { LogOut } from '@/action/auth.action';
+import { LogOut } from '@/actions/auth.action';
 import { Bell, ChevronDown, Menu, X } from 'lucide-react';
 import { Button } from './ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
@@ -20,7 +20,7 @@ import {
 import { AnimatePresence, motion } from 'framer-motion';
 import { useState } from 'react';
 import { NotificationType } from '@/generated/prisma';
-import { markNotificationsAsRead } from '@/action/post.action';
+import { markNotificationsAsRead } from '@/actions/post.action';
 
 interface Users {
   image: string;
