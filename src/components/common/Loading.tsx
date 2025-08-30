@@ -24,8 +24,11 @@ function Loading() {
 
   return (
     <div className="fixed inset-0 flex flex-col justify-center items-center bg-white z-50">
-      <Image src={lms} width={200} 
-        height={100} alt='Error Image' className="mb-4 text-lg font-semibold" />
+      <Image src={lms} 
+        width={200} 
+        height={100} 
+        alt='Error Image' className="mb-4 w-[200px] h-auto"
+        priority/>
       <Progress value={progress} className="sm:w-[30%] w-[50%]" />
     </div>
   );

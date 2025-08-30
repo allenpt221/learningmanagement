@@ -16,11 +16,12 @@ const DEPARTMENT_MAP = {
 } as const;
 
 interface ProfilePageProps {
-  params: { username: string };
+  params: Promise<{ username: string }>;
 }
 
 export async function generateMetadata({ params }: ProfilePageProps): Promise<Metadata> {
-  const user = await getProfileByUsername(params?.username);
+  const { username } = await params;
+  const user = await getProfileByUsername(username);
   
   if (!user) return {
     title: 'Profile not found'
@@ -33,9 +34,9 @@ export async function generateMetadata({ params }: ProfilePageProps): Promise<Me
 }
 
 async function ProfilePage({ params }: ProfilePageProps) {
-
+  const { username } = await params;
   const profile = await getProfile(); 
-  const user = await getProfileByUsername(params.username, profile?.user?.id);
+  const user = await getProfileByUsername(username, profile?.user?.id);
 
   if (!user) {
     notFound();
