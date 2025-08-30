@@ -11,7 +11,7 @@ interface FollowButtonProps {
   isLoggedIn: boolean;
 }
 
-export default function FollowButton({ targetUserId, isFollowing, isLoggedIn }: FollowButtonProps) {
+function FollowButton({ targetUserId, isFollowing, isLoggedIn }: FollowButtonProps) {
   const [following, setFollowing] = useState(isFollowing);
   const [notLoggedIn, setNotLoggedIn] = useState(false);
 
@@ -71,3 +71,5 @@ export default function FollowButton({ targetUserId, isFollowing, isLoggedIn }: 
     </>
   );
 }
+
+export default FollowButton;

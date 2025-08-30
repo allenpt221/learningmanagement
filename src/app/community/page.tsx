@@ -4,7 +4,7 @@ import { getProfile } from "@/server-action/auth.action";
 import { getCommunities } from "@/server-action/community.action";
 import Link from "next/link";
 
-export default async function Page() {
+async function Page() {
   const res = await getCommunities();
   const communities = res.community;
 
@@ -12,7 +12,7 @@ export default async function Page() {
 
   return (
     <div className="max-w-6xl mx-auto py-5 px-4">
-      {communities?.length === 0 ? (
+      {communities.length === 0 ? (
         <p className="text-gray-500 text-center py-10">
           No communities available for your department.
         </p>
@@ -58,3 +58,5 @@ export default async function Page() {
     </div>
   );
 }
+
+export default Page;

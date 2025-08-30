@@ -1,4 +1,4 @@
-import { mapCourses } from "@/lib/courses";
+import mapCourses from "@/lib/courses";
 import type { Metadata } from "next";
 import Link from "next/link";
 
@@ -27,7 +27,7 @@ export async function generateMetadata({
   };
 }
 
-export default function Page({ params }: { params: { id: string } }) {
+function Page({ params }: { params: { id: string } }) {
   const course = mapCourses.find((c) => c.id === params.id);
 
   if (!course) {
@@ -88,3 +88,5 @@ export default function Page({ params }: { params: { id: string } }) {
     </div>
   );
 }
+
+export default Page;

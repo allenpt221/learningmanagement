@@ -5,7 +5,7 @@ import { Progress } from "@/components/ui/progress";
 import Image from 'next/image';
 import lms from '@/Images/lms.jpg'
 
-export default function Loading() {
+function Loading() {
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
@@ -30,3 +30,5 @@ export default function Loading() {
     </div>
   );
 }
+
+export default Loading;

@@ -1,13 +1,8 @@
+import mapCourses from "@/lib/courses";
 import Link from "next/link";
-import { mapCourses } from "@/lib/courses";
 
 
-
-
-
-
-
-export default function Page() {
+function Page() {
   return (
     <div className="max-w-7xl mx-auto px-4 py-10">
       <h1 className="text-xl text-center mb-8 md:w-[50rem] mx-auto">Explore a diverse range of courses from modern technologies to engineering principles and business strategies.</h1>
@@ -41,3 +36,5 @@ export default function Page() {
     </div>
   );
 }
+
+export default Page;

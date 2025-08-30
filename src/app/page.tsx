@@ -13,7 +13,7 @@ export const DEPARTMENT_MAP = {
   CEA: 'College of Engineering and Arts'
 } as const;
 
-export default async function Home() {
+async function Home() {
   const profile = await getProfile();
   const posts = profile?.user
     ? await getPostsByDepartmentType(profile.user.type) 
@@ -133,3 +133,5 @@ export default async function Home() {
     </div>
   );
 }
+
+export default Home;

@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Loading from "./common/Loading";
 
-export default function ClientLayoutWrapper({ children }: { children: React.ReactNode }) {
+function ClientLayoutWrapper({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -13,3 +13,5 @@ export default function ClientLayoutWrapper({ children }: { children: React.Reac
 
   return isLoading ? <Loading /> : <>{children}</>;
 }
+
+export default ClientLayoutWrapper;

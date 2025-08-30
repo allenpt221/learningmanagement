@@ -32,7 +32,7 @@ export async function generateMetadata({ params }: ProfilePageProps): Promise<Me
   };
 }
 
-export default async function ProfilePage({ params }: ProfilePageProps) {
+async function ProfilePage({ params }: ProfilePageProps) {
 
   const profile = await getProfile(); // logged-in user
   const user = await getProfileByUsername(params.username, profile?.user?.id);
@@ -117,7 +117,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
       
       {/* Posts Section */}
       <div className="space-y-4">
-        {normalizedPosts.length > 0 ? (
+        {normalizedPosts?.length > 0 ? (
           normalizedPosts.map(post => (
             <ProfileContent
               key={post.id}
@@ -136,3 +136,5 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
     </div>
   );
 }
+
+export default ProfilePage;

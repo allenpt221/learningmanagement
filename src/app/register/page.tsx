@@ -2,7 +2,7 @@ import { SignupForm } from "@/components/register-form"
 import { GalleryVerticalEnd } from "lucide-react"
 
 
-export default function RegisterPage() {
+function RegisterPage() {
 
   return (
     <div className="grid h-[55.5rem] lg:grid-cols-2">
@@ -31,3 +31,5 @@ export default function RegisterPage() {
     </div>
   )
 }
+
+export default RegisterPage;

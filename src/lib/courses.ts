@@ -2,7 +2,7 @@ import Electrical from '@/Images/electrical.png';
 import BusinnesMarketing from '@/Images/businessmarketing.png';
 import Marketing from '@/Images/marketing.png';
 
-export const mapCourses = [
+const mapCourses = [
   {
     id: "f64d6c2f-131a-41e2-bb45-ced198035f5e",
     course: "TypeScript",
@@ -36,19 +36,21 @@ export const mapCourses = [
   {
     id: "ad1f90b2-87cb-43f6-9f12-6cf032b674aa",
     course: "Electrical Engineering",
-    img: Electrical.src,
+    img: Electrical,
     descrip: "Learn circuits, electronics, and power systems to build modern electrical solutions.",
   },
   {
     id: "6e91d51c-2e2c-4d67-9b4d-1a27d4cc5a9e",
     course: "Business Management",
-    img: BusinnesMarketing.src,
+    img: BusinnesMarketing,
     descrip: "Understand leadership, organizational behavior, and strategic management.",
   },
   {
     id: "c95b2f3e-53c1-4df0-9c59-3f45e2445b7d",
     course: "Marketing",
-    img: Marketing.src,
+    img: Marketing,
     descrip: "Learn market research, branding, and digital marketing strategies.",
   },
 ];
+
+export default mapCourses;

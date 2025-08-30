@@ -5,7 +5,7 @@ import { getProfile } from "@/server-action/auth.action";
 import { redirect } from "next/navigation";
 
 
-export default async function LoginPage() {
+async function LoginPage() {
 
       const profile = await getProfile();
   
@@ -40,3 +40,5 @@ export default async function LoginPage() {
     </div>
   )
 }
+
+export default LoginPage;

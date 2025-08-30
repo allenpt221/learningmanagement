@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 
-export default function PostContent({ content }: { content: string }) {
+function PostContent({ content }: { content: string }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const maxLength = 100;
 
@@ -52,3 +52,6 @@ export default function PostContent({ content }: { content: string }) {
     </div>
   );
 }
+
+
+export default PostContent;

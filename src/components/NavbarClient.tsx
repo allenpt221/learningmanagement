@@ -37,7 +37,7 @@ type NotificationWithCreator = {
   createdAt: Date;
 };
 
-export default function NavbarClient({ profile, notif = [] }: { profile: any, notif: NotificationWithCreator[] }) {
+function NavbarClient({ profile, notif = [] }: { profile: any, notif: NotificationWithCreator[] }) {
   const router = useRouter();
 
   const [isOpen, setIsOpen] = useState(false);
@@ -238,3 +238,5 @@ export default function NavbarClient({ profile, notif = [] }: { profile: any, no
     </header>
   );
 }
+
+export default NavbarClient;
