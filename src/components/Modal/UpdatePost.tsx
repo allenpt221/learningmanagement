@@ -187,7 +187,7 @@ function UpdatePost({ isClose, isOpen, postId }: UpdatePostProps) {
                 />
 
                 {imagePreview ? (
-                  <div className="relative w-full">
+                  <div className="relative w-full h-[20rem] overflow-hidden rounded">
                     <img
                       src={imagePreview}
                       alt="Post preview"
@@ -204,7 +204,7 @@ function UpdatePost({ isClose, isOpen, postId }: UpdatePostProps) {
                 ) : (
                   <label
                     htmlFor="image-upload"
-                    className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-blue-500 transition-colors"
+                    className="flex flex-col items-center justify-center w-full sm:h-[20rem] h-[10rem] border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-blue-500 transition-colors"
                   >
                     <Upload className="w-8 h-8 text-gray-400 mb-2" />
                     <span className="text-gray-500">Click to upload an image</span>
@@ -213,7 +213,6 @@ function UpdatePost({ isClose, isOpen, postId }: UpdatePostProps) {
               </div>
             </div>
 
-            {/* Footer */}
             <div className="flex justify-end p-4 border-t gap-3">
               <button
                 onClick={isClose}
